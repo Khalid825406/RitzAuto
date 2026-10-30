@@ -1,16 +1,17 @@
 "use client";
 import Image from "next/image";
-import {AnimatePresence, MotionConfig , motion } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-
+import Link from "next/link";
 import {
   Phone, Mail, MapPin, Wrench, Truck, ShieldCheck, Car, Settings, Armchair, SprayCan,
-  ScanSearch, Award,Gauge as GaugeIcon, HeartHandshake, CalendarCheck, KeyRound, ClipboardCheck, ThumbsUp,
+  ScanSearch, Award, Gauge as GaugeIcon, HeartHandshake, CalendarCheck, KeyRound, ClipboardCheck, ThumbsUp,
   BatteryCharging, Zap, CircleDot, Fuel, Star, Check, ArrowRight, MessageCircle,
   ArrowUpRight,
   Sparkles,
   Droplets,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight,
+
 } from "lucide-react";
 
 const PHONE = "80079772";
@@ -114,27 +115,27 @@ function Gauge() {
           strokeDasharray="745" initial={{ strokeDashoffset: 745 }} animate={{ strokeDashoffset: 190 }}
           transition={{ duration: 2, delay: 0.5, ease: "easeOut" }} transform="rotate(135 200 200)" />
         {ticks.map((k) => {
-  const a = ((135 + k * 6.75) * Math.PI) / 180;
-  const big = k % 5 === 0;
-  const r1 = big ? 128 : 136;
+          const a = ((135 + k * 6.75) * Math.PI) / 180;
+          const big = k % 5 === 0;
+          const r1 = big ? 128 : 136;
 
-  const x1 = Number((200 + r1 * Math.cos(a)).toFixed(4));
-  const y1 = Number((200 + r1 * Math.sin(a)).toFixed(4));
-  const x2 = Number((200 + 146 * Math.cos(a)).toFixed(4));
-  const y2 = Number((200 + 146 * Math.sin(a)).toFixed(4));
+          const x1 = Number((200 + r1 * Math.cos(a)).toFixed(4));
+          const y1 = Number((200 + r1 * Math.sin(a)).toFixed(4));
+          const x2 = Number((200 + 146 * Math.cos(a)).toFixed(4));
+          const y2 = Number((200 + 146 * Math.sin(a)).toFixed(4));
 
-  return (
-    <line
-      key={k}
-      x1={x1}
-      y1={y1}
-      x2={x2}
-      y2={y2}
-      stroke={big ? "#fff" : "#5a6a85"}
-      strokeWidth={big ? 3 : 1.5}
-    />
-  );
-})}
+          return (
+            <line
+              key={k}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              stroke={big ? "#fff" : "#5a6a85"}
+              strokeWidth={big ? 3 : 1.5}
+            />
+          );
+        })}
         <motion.g style={{ originX: "200px", originY: "200px" }} initial={{ rotate: -135 }} animate={{ rotate: 90 }} transition={{ duration: 2, delay: 0.5, ease: [0.2, 0.8, 0.2, 1] }}>
           <polygon points="200,200 192,196 196,70 204,70 208,196" fill="#e63946" transform="rotate(0 200 200)" />
         </motion.g>
@@ -177,30 +178,184 @@ const heroSlides = [
   },
 ];
 
+
+
+const transformations = [
+  {
+    title: "Paint Correction",
+    description: "Scratches removed and gloss restored.",
+    before: "/paint-before.png",
+    after: "/paint-after.png",
+  },
+  {
+    title: "Headlight Restoration",
+    description: "Oxidation removed for clearer headlights.",
+    before: "/headlight-before.png",
+    after: "/headlight-after.png",
+  },
+];
+
+function BeforeAfterCard({
+  item,
+}: {
+  item: (typeof transformations)[number];
+}) {
+  const [position, setPosition] = useState(50);
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+      {/* Image Comparison */}
+      <div className="relative h-[230px] overflow-hidden sm:h-[280px]">
+
+        {/* Before Image */}
+        <Image
+          src={item.before}
+          alt={`${item.title} before`}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="object-cover"
+        />
+
+        {/* After Image */}
+        <div
+          className="absolute inset-0"
+          style={{
+            clipPath: `inset(0 0 0 ${position}%)`,
+          }}
+        >
+          <Image
+            src={item.after}
+            alt={`${item.title} after`}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
+        </div>
+
+        {/* Labels */}
+        <span className="absolute left-3 top-3 z-10 rounded-md bg-white px-3 py-1.5 text-[11px] font-bold text-slate-900 shadow">
+          Before
+        </span>
+
+        <span className="absolute right-3 top-3 z-10 rounded-md bg-white px-3 py-1.5 text-[11px] font-bold text-slate-900 shadow">
+          After
+        </span>
+
+        {/* Slider Line */}
+        <div
+          className="pointer-events-none absolute bottom-0 top-0 z-20 w-[2px] bg-white shadow"
+          style={{ left: `${position}%` }}
+        />
+
+        {/* Slider Handle */}
+        <div
+          className="pointer-events-none absolute top-1/2 z-30 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 border-white bg-white text-slate-900 shadow-lg"
+          style={{ left: `${position}%` }}
+        >
+          <ArrowRight size={16} />
+        </div>
+
+        {/* Interactive Range */}
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={position}
+          onChange={(e) => setPosition(Number(e.target.value))}
+          aria-label={`Compare before and after ${item.title}`}
+          className="absolute inset-0 z-40 h-full w-full cursor-ew-resize opacity-0"
+        />
+      </div>
+
+      {/* Card Details */}
+      <div className="px-5 py-4">
+        <h3 className="text-sm font-bold text-[#101828]">
+          {item.title}
+        </h3>
+
+        <p className="mt-1 text-xs leading-5 text-slate-500">
+          {item.description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function BeforeAfterSection() {
+  return (
+    <section className="bg-white py-20 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        {/* Heading */}
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-royal">
+            Our Work
+          </span>
+
+          <h2 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-[#101828] sm:text-5xl">
+            Visible Results.
+            <span className="block">Real Transformations.</span>
+          </h2>
+
+          <p className="mx-auto mt-5 max-w-lg text-sm leading-7 text-slate-500 sm:text-base">
+            Real before-and-after results from diagnostics,
+            detailing, and performance upgrades.
+          </p>
+        </div>
+
+        {/* Comparison Cards */}
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {transformations.map((item) => (
+            <BeforeAfterCard key={item.title} item={item} />
+          ))}
+        </div>
+
+        {/* Gallery Button */}
+        <div className="mt-12 text-center">
+          <Link
+            href="#"
+            className="group inline-flex items-center gap-3 rounded-lg bg-royal px-8 py-4 text-sm font-bold text-white shadow-lg shadow-royal/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#101828]"
+          >
+            View Full Gallery
+            <ArrowRight
+              size={18}
+              className="transition-transform group-hover:translate-x-1"
+            />
+          </Link>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+
+
 export default function Home() {
 
- const [activeSlide, setActiveSlide] = useState(0);
-const [isPaused, setIsPaused] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
-useEffect(() => {
-  if (isPaused) return;
+  useEffect(() => {
+    if (isPaused) return;
 
-  const timer = setInterval(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((current) => (current + 1) % heroSlides.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [isPaused]);
+
+  const nextSlide = () => {
     setActiveSlide((current) => (current + 1) % heroSlides.length);
-  }, 5000);
+  };
 
-  return () => clearInterval(timer);
-}, [isPaused]);
-
-const nextSlide = () => {
-  setActiveSlide((current) => (current + 1) % heroSlides.length);
-};
-
-const prevSlide = () => {
-  setActiveSlide(
-    (current) => (current - 1 + heroSlides.length) % heroSlides.length
-  );
-};
+  const prevSlide = () => {
+    setActiveSlide(
+      (current) => (current - 1 + heroSlides.length) % heroSlides.length
+    );
+  };
 
   return (
     <MotionConfig reducedMotion="user">
@@ -226,213 +381,212 @@ const prevSlide = () => {
         </div>
       </header>
 
-   
 
 
 
 
 
 
-{/* COMPACT PREMIUM HERO CAROUSEL */}
 
-<section
-  className="relative isolate h-[560px] overflow-hidden bg-[#080B12] text-white sm:h-[600px] lg:h-[min(80vh,620px)]"
-  onMouseEnter={() => setIsPaused(true)}
-  onMouseLeave={() => setIsPaused(false)}
->
-  {/* BACKGROUND IMAGE */}
+      {/* COMPACT PREMIUM HERO CAROUSEL */}
 
-  <AnimatePresence mode="sync">
-    <motion.div
-      key={activeSlide}
-      initial={{ opacity: 0, scale: 1.045 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{
-        opacity: { duration: 0.8 },
-        scale: { duration: 5.5, ease: "linear" },
-      }}
-      className="absolute inset-0"
-    >
-      <Image
-        src={heroSlides[activeSlide].image}
-        alt={heroSlides[activeSlide].caption}
-        fill
-        priority={activeSlide === 0}
-        sizes="100vw"
-        className="object-cover object-center"
-      />
-    </motion.div>
-  </AnimatePresence>
+      <section
+        className="relative isolate h-[560px] overflow-hidden bg-[#080B12] text-white sm:h-[600px] lg:h-[min(80vh,620px)]"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        {/* BACKGROUND IMAGE */}
 
-  {/* IMAGE OVERLAY */}
+        <AnimatePresence mode="sync">
+          <motion.div
+            key={activeSlide}
+            initial={{ opacity: 0, scale: 1.045 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              opacity: { duration: 0.8 },
+              scale: { duration: 5.5, ease: "linear" },
+            }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={heroSlides[activeSlide].image}
+              alt={heroSlides[activeSlide].caption}
+              fill
+              priority={activeSlide === 0}
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+          </motion.div>
+        </AnimatePresence>
 
-  <div className="absolute inset-0 bg-gradient-to-r from-[#070B14]/95 via-[#070B14]/70 to-[#070B14]/20" />
-  <div className="absolute inset-0 bg-gradient-to-t from-[#070B14]/65 via-transparent to-transparent" />
+        {/* IMAGE OVERLAY */}
 
-  {/* MAIN CONTENT */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#070B14]/95 via-[#070B14]/70 to-[#070B14]/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#070B14]/65 via-transparent to-transparent" />
 
-  <div className="relative z-10 mx-auto flex h-full max-w-[1440px] items-center px-5 pb-12 pt-10 sm:px-8 lg:px-14">
+        {/* MAIN CONTENT */}
 
-    <div className="w-full max-w-xl">
+        <div className="relative z-10 mx-auto flex h-full max-w-[1440px] items-center px-5 pb-12 pt-10 sm:px-8 lg:px-14">
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeSlide}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -12 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
+          <div className="w-full max-w-xl">
 
-          {/* EYEBROW */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSlide}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
 
-          <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/90 sm:text-[10px]">
-              {heroSlides[activeSlide].eyebrow}
-            </span>
+                {/* EYEBROW */}
+
+                <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 backdrop-blur-md">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/90 sm:text-[10px]">
+                    {heroSlides[activeSlide].eyebrow}
+                  </span>
+                </div>
+
+                {/* HEADING */}
+
+                <h1 className="max-w-lg text-[32px] font-extrabold leading-[1.12] tracking-tight sm:text-[42px] lg:text-[48px]">
+                  {heroSlides[activeSlide].title}
+                  <span className="mt-1 block text-blue-400">
+                    {heroSlides[activeSlide].highlight}
+                  </span>
+                </h1>
+
+                {/* DESCRIPTION */}
+
+                <p className="mt-4 max-w-md text-[12px] leading-6 text-white/75 sm:text-[13px] sm:leading-7">
+                  {heroSlides[activeSlide].description}
+                </p>
+
+                {/* LOCATION */}
+
+                <div className="mt-4 flex items-center gap-2 text-[11px] font-medium text-white/75">
+                  <MapPin size={14} className="text-blue-400" />
+                  Dubai & Abu Dhabi, UAE
+                </div>
+
+                {/* BUTTONS */}
+
+                <div className="mt-6 flex flex-wrap gap-3">
+
+                  <a
+                    href="#contact"
+                    className="group inline-flex items-center gap-2 rounded-full bg-royal px-5 py-3 text-[11px] font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#174DAA] sm:text-xs"
+                  >
+                    Book Your Service
+                    <ArrowRight
+                      size={14}
+                      className="transition-transform group-hover:translate-x-1"
+                    />
+                  </a>
+
+                  <a
+                    href={`tel:${PHONE}`}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-slate-900 sm:text-xs"
+                  >
+                    <Phone size={14} />
+                    {PHONE}
+                  </a>
+
+                </div>
+
+                {/* FREE BENEFITS */}
+
+                <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/20 pt-5">
+
+                  {[
+                    "Free Pick-up & Drop-off",
+                    "Free Inspection",
+                    "Complimentary Wash",
+                  ].map((item) => (
+                    <div key={item} className="flex items-center gap-1.5">
+                      <Check size={13} className="shrink-0 text-emerald-400" />
+                      <span className="text-[10px] font-medium text-white/80 sm:text-[11px]">
+                        {item}
+                      </span>
+                    </div>
+                  ))}
+
+                </div>
+
+              </motion.div>
+            </AnimatePresence>
+
           </div>
+        </div>
 
-          {/* HEADING */}
+        {/* SLIDER NAVIGATION */}
 
-          <h1 className="max-w-lg text-[32px] font-extrabold leading-[1.12] tracking-tight sm:text-[42px] lg:text-[48px]">
-            {heroSlides[activeSlide].title}
-            <span className="mt-1 block text-blue-400">
-              {heroSlides[activeSlide].highlight}
-            </span>
-          </h1>
+        <div className="absolute bottom-5 left-5 right-5 z-20 mx-auto flex max-w-[1440px] items-center justify-between sm:left-8 sm:right-8 lg:left-14 lg:right-14">
 
-          {/* DESCRIPTION */}
+          {/* INDICATORS */}
 
-          <p className="mt-4 max-w-md text-[12px] leading-6 text-white/75 sm:text-[13px] sm:leading-7">
-            {heroSlides[activeSlide].description}
-          </p>
+          <div className="flex items-center gap-2.5">
 
-          {/* LOCATION */}
-
-          <div className="mt-4 flex items-center gap-2 text-[11px] font-medium text-white/75">
-            <MapPin size={14} className="text-blue-400" />
-            Dubai & Abu Dhabi, UAE
-          </div>
-
-          {/* BUTTONS */}
-
-          <div className="mt-6 flex flex-wrap gap-3">
-
-            <a
-              href="#contact"
-              className="group inline-flex items-center gap-2 rounded-full bg-royal px-5 py-3 text-[11px] font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#174DAA] sm:text-xs"
-            >
-              Book Your Service
-              <ArrowRight
-                size={14}
-                className="transition-transform group-hover:translate-x-1"
+            {heroSlides.map((slide, index) => (
+              <button
+                key={slide.image}
+                type="button"
+                onClick={() => setActiveSlide(index)}
+                aria-label={`Go to slide ${index + 1}`}
+                aria-current={activeSlide === index ? "true" : undefined}
+                className={`h-1.5 rounded-full transition-all duration-500 ${activeSlide === index
+                    ? "w-9 bg-white"
+                    : "w-4 bg-white/40 hover:bg-white/80"
+                  }`}
               />
-            </a>
-
-            <a
-              href={`tel:${PHONE}`}
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-slate-900 sm:text-xs"
-            >
-              <Phone size={14} />
-              {PHONE}
-            </a>
-
-          </div>
-
-          {/* FREE BENEFITS */}
-
-          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/20 pt-5">
-
-            {[
-              "Free Pick-up & Drop-off",
-              "Free Inspection",
-              "Complimentary Wash",
-            ].map((item) => (
-              <div key={item} className="flex items-center gap-1.5">
-                <Check size={13} className="shrink-0 text-emerald-400" />
-                <span className="text-[10px] font-medium text-white/80 sm:text-[11px]">
-                  {item}
-                </span>
-              </div>
             ))}
 
+            <span className="ml-2 text-[10px] font-semibold tracking-widest text-white/70">
+              0{activeSlide + 1} / 0{heroSlides.length}
+            </span>
+
           </div>
 
-        </motion.div>
-      </AnimatePresence>
+          {/* ARROWS */}
 
-    </div>
-  </div>
+          <div className="flex items-center gap-2">
 
-  {/* SLIDER NAVIGATION */}
+            <button
+              type="button"
+              onClick={prevSlide}
+              aria-label="Previous slide"
+              className="grid h-9 w-9 place-items-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md transition hover:bg-white hover:text-black"
+            >
+              <ChevronLeft size={17} />
+            </button>
 
-  <div className="absolute bottom-5 left-5 right-5 z-20 mx-auto flex max-w-[1440px] items-center justify-between sm:left-8 sm:right-8 lg:left-14 lg:right-14">
+            <button
+              type="button"
+              onClick={nextSlide}
+              aria-label="Next slide"
+              className="grid h-9 w-9 place-items-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md transition hover:bg-white hover:text-black"
+            >
+              <ChevronRight size={17} />
+            </button>
 
-    {/* INDICATORS */}
+          </div>
 
-    <div className="flex items-center gap-2.5">
+        </div>
 
-      {heroSlides.map((slide, index) => (
-        <button
-          key={slide.image}
-          type="button"
-          onClick={() => setActiveSlide(index)}
-          aria-label={`Go to slide ${index + 1}`}
-          aria-current={activeSlide === index ? "true" : undefined}
-          className={`h-1.5 rounded-full transition-all duration-500 ${
-            activeSlide === index
-              ? "w-9 bg-white"
-              : "w-4 bg-white/40 hover:bg-white/80"
-          }`}
-        />
-      ))}
+        {/* BRAND CAPTION */}
 
-      <span className="ml-2 text-[10px] font-semibold tracking-widest text-white/70">
-        0{activeSlide + 1} / 0{heroSlides.length}
-      </span>
+        <div className="absolute bottom-[75px] right-8 z-10 hidden text-right lg:block">
+          <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/50">
+            Ritz Auto Care LLC
+          </p>
+          <p className="mt-1 text-xs font-semibold text-white/80">
+            {heroSlides[activeSlide].caption}
+          </p>
+        </div>
 
-    </div>
-
-    {/* ARROWS */}
-
-    <div className="flex items-center gap-2">
-
-      <button
-        type="button"
-        onClick={prevSlide}
-        aria-label="Previous slide"
-        className="grid h-9 w-9 place-items-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md transition hover:bg-white hover:text-black"
-      >
-        <ChevronLeft size={17} />
-      </button>
-
-      <button
-        type="button"
-        onClick={nextSlide}
-        aria-label="Next slide"
-        className="grid h-9 w-9 place-items-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md transition hover:bg-white hover:text-black"
-      >
-        <ChevronRight size={17} />
-      </button>
-
-    </div>
-
-  </div>
-
-  {/* BRAND CAPTION */}
-
-  <div className="absolute bottom-[75px] right-8 z-10 hidden text-right lg:block">
-    <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/50">
-      Ritz Auto Care LLC
-    </p>
-    <p className="mt-1 text-xs font-semibold text-white/80">
-      {heroSlides[activeSlide].caption}
-    </p>
-  </div>
-
-</section>
+      </section>
 
 
 
@@ -450,531 +604,509 @@ const prevSlide = () => {
         </div>
       </section>
 
-  
-{/* Premium Services Section */}
 
-<section
-  id="services"
-  className="relative overflow-hidden bg-[#F4F6FA] py-24"
->
-  {/* Background Decoration */}
-  <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/50 blur-[120px]" />
+      {/* Premium Services Section */}
 
-  <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section
+        id="services"
+        className="relative overflow-hidden bg-[#F4F6FA] py-24"
+      >
+        {/* Background Decoration */}
+        <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/50 blur-[120px]" />
 
-    <div className="grid items-start gap-14 lg:grid-cols-[0.85fr_1.5fr]">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-      {/* Left Content */}
-      <div className="lg:sticky lg:top-32">
+          <div className="grid items-start gap-14 lg:grid-cols-[0.85fr_1.5fr]">
 
-        <span className="inline-flex items-center gap-2 rounded-full border border-royal/20 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-royal shadow-sm">
-          <Wrench size={14} />
-          Our Services
-        </span>
+            {/* Left Content */}
+            <div className="lg:sticky lg:top-32">
 
-        <h2 className="mt-7 text-4xl font-extrabold leading-[1.12] tracking-tight text-[#101828] sm:text-5xl">
-          Complete Care.
-          <span className="block text-royal">
-            Exceptional Performance.
-          </span>
-        </h2>
-
-        <p className="mt-6 max-w-lg text-base leading-8 text-slate-600 sm:text-lg">
-          Everything your vehicle needs, all under one roof.
-          From routine maintenance to advanced automotive
-          repairs, we deliver dealer-standard service with
-          professional care.
-        </p>
-
-        {/* Highlights */}
-        <div className="mt-9 space-y-5">
-
-          {[
-            "Certified automotive technicians",
-            "Advanced diagnostic equipment",
-            "Premium quality parts and workmanship",
-          ].map((item, index) => (
-
-            <div key={item} className="flex items-center gap-3">
-
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-royal text-white">
-                <Check size={15} strokeWidth={3} />
+              <span className="inline-flex items-center gap-2 rounded-full border border-royal/20 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-royal shadow-sm">
+                <Wrench size={14} />
+                Our Services
               </span>
 
-              <span className="text-sm font-semibold text-slate-700">
-                {item}
-              </span>
-
-            </div>
-
-          ))}
-
-        </div>
-
-        {/* CTA */}
-        <div className="mt-10 flex flex-wrap items-center gap-4">
-
-          <a
-            href="#contact"
-            className="inline-flex items-center gap-3 rounded-lg bg-royal px-7 py-4 font-bold text-white shadow-lg shadow-royal/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#101828]"
-          >
-            Explore Our Services
-            <ArrowUpRight size={18} />
-          </a>
-
-        </div>
-
-        {/* Experience Highlight */}
-        <div className="mt-12 flex items-center gap-4 border-t border-slate-200 pt-8">
-
-          <div className="font-display text-5xl font-black text-royal">
-            20+
-          </div>
-
-          <div>
-            <p className="font-bold text-[#101828]">
-              Years of Experience
-            </p>
-
-            <p className="mt-1 text-sm text-slate-500">
-              Professional automotive care
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* Right Service Cards */}
-      <div>
-
-        <div className="mb-6 flex items-center justify-between">
-
-          <h3 className="text-lg font-extrabold text-[#101828]">
-            What We Offer
-          </h3>
-
-          <span className="rounded-full bg-white px-4 py-2 text-xs font-bold text-royal shadow-sm">
-            09 Services
-          </span>
-
-        </div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ staggerChildren: 0.07 }}
-          className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5"
-        >
-
-          {services.map(({ i: Icon, t }, index) => (
-
-            <motion.a
-              key={t}
-              href="#contact"
-              variants={up}
-              whileHover={{ y: -7 }}
-              className="group relative flex min-h-[180px] flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all duration-300 hover:border-royal/40 hover:shadow-xl hover:shadow-royal/10 sm:min-h-[205px] sm:p-6"
-            >
-
-              {/* Background Hover Effect */}
-              <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-royal/5 transition-all duration-500 group-hover:scale-[2.5] group-hover:bg-royal/10" />
-
-              {/* Number */}
-              <div className="relative flex items-center justify-between">
-
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-[#F0F4FA] text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white">
-                  <Icon size={25} strokeWidth={1.7} />
+              <h2 className="mt-7 text-4xl font-extrabold leading-[1.12] tracking-tight text-[#101828] sm:text-5xl">
+                Complete Care.
+                <span className="block text-royal">
+                  Exceptional Performance.
                 </span>
+              </h2>
 
-                <span className="text-xs font-bold tracking-widest text-slate-300 transition-colors group-hover:text-royal">
-                  {(index + 1).toString().padStart(2, "0")}
-                </span>
+              <p className="mt-6 max-w-lg text-base leading-8 text-slate-600 sm:text-lg">
+                Everything your vehicle needs, all under one roof.
+                From routine maintenance to advanced automotive
+                repairs, we deliver dealer-standard service with
+                professional care.
+              </p>
+
+              {/* Highlights */}
+              <div className="mt-9 space-y-5">
+
+                {[
+                  "Certified automotive technicians",
+                  "Advanced diagnostic equipment",
+                  "Premium quality parts and workmanship",
+                ].map((item, index) => (
+
+                  <div key={item} className="flex items-center gap-3">
+
+                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-royal text-white">
+                      <Check size={15} strokeWidth={3} />
+                    </span>
+
+                    <span className="text-sm font-semibold text-slate-700">
+                      {item}
+                    </span>
+
+                  </div>
+
+                ))}
 
               </div>
 
-              {/* Title */}
-              <div className="relative mt-8">
+              {/* CTA */}
+              <div className="mt-10 flex flex-wrap items-center gap-4">
 
-                <h3 className="text-sm font-extrabold leading-snug text-[#101828] transition-colors group-hover:text-royal sm:text-base">
-                  {t}
-                </h3>
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-3 rounded-lg bg-royal px-7 py-4 font-bold text-white shadow-lg shadow-royal/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#101828]"
+                >
+                  Explore Our Services
+                  <ArrowUpRight size={18} />
+                </a>
 
-                <div className="mt-4 flex items-center justify-between">
+              </div>
 
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 transition-colors group-hover:text-royal">
-                    Explore Service
-                  </span>
+              {/* Experience Highlight */}
+              <div className="mt-12 flex items-center gap-4 border-t border-slate-200 pt-8">
 
-                  <ArrowUpRight
-                    size={17}
-                    className="text-slate-400 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-royal"
-                  />
+                <div className="font-display text-5xl font-black text-royal">
+                  20+
+                </div>
 
+                <div>
+                  <p className="font-bold text-[#101828]">
+                    Years of Experience
+                  </p>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    Professional automotive care
+                  </p>
                 </div>
 
               </div>
 
-            </motion.a>
-
-          ))}
-
-        </motion.div>
-
-        {/* Bottom Info */}
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#101828] px-6 py-5 text-white">
-
-          <div>
-            <p className="font-bold">
-              Need professional car assistance?
-            </p>
-
-            <p className="mt-1 text-xs text-slate-400">
-              Our team is ready to help you.
-            </p>
-          </div>
-
-          <a
-            href={WA}
-            className="inline-flex items-center gap-2 rounded-lg bg-green-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-green-600"
-          >
-            <MessageCircle size={17} />
-            WhatsApp
-          </a>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-
-
-{/* Premium About + Why Choose Us */}
-
-<section
-  id="about"
-  className="relative overflow-hidden bg-[#F4F6FA] py-24"
->
-  {/* Background Decoration */}
-  <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/50 blur-[120px]" />
-
-  <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-    {/* About Main Content */}
-    <div className="grid items-center gap-14 lg:grid-cols-2">
-
-      {/* Left Content */}
-      <div>
-
-        <span className="inline-flex items-center gap-2 rounded-full border border-royal/20 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-royal shadow-sm">
-          <ShieldCheck size={15} />
-          About Ritz Auto Care
-        </span>
-
-        <h2 className="mt-7 text-4xl font-extrabold leading-[1.12] tracking-tight text-[#101828] sm:text-5xl">
-          More Than Just
-          <span className="block text-royal">
-            Car Maintenance.
-          </span>
-          We Care About Your Drive.
-        </h2>
-
-        <p className="mt-7 text-base leading-8 text-slate-600 sm:text-lg">
-          Ritz Auto Care is committed to delivering professional
-          automotive repair and maintenance services in Dubai
-          and Abu Dhabi. Our skilled technicians combine
-          advanced diagnostic technology, modern equipment
-          and quality workmanship to keep your vehicle
-          performing at its best.
-        </p>
-
-        <p className="mt-4 text-base leading-8 text-slate-600">
-          From routine servicing to complex mechanical repairs,
-          we focus on reliability, transparency and customer
-          satisfaction at every step.
-        </p>
-
-        {/* Highlights */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-
-          {[
-            "Professional Technicians",
-            "Advanced Diagnostics",
-            "Quality Workmanship",
-            "Customer-Focused Service",
-          ].map((item) => (
-
-            <div
-              key={item}
-              className="flex items-center gap-3"
-            >
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-royal text-white">
-                <Check size={15} strokeWidth={3} />
-              </span>
-
-              <span className="text-sm font-bold text-[#101828]">
-                {item}
-              </span>
-
             </div>
 
-          ))}
+            {/* Right Service Cards */}
+            <div>
 
-        </div>
+              <div className="mb-6 flex items-center justify-between">
 
-        {/* CTA */}
-        <div className="mt-10 flex flex-wrap gap-4">
+                <h3 className="text-lg font-extrabold text-[#101828]">
+                  What We Offer
+                </h3>
 
-          <a
-            href="#contact"
-            className="inline-flex items-center gap-3 rounded-lg bg-royal px-7 py-4 font-bold text-white shadow-lg shadow-royal/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#101828]"
-          >
-            Get in Touch
-            <ArrowUpRight size={18} />
-          </a>
-
-          <a
-            href={`tel:${PHONE}`}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-7 py-4 font-bold text-[#101828] transition-all hover:border-royal hover:text-royal"
-          >
-            <Phone size={18} />
-            Call Us
-          </a>
-
-        </div>
-
-      </div>
-
-      {/* Right Visual Panel */}
-      <motion.div
-        initial={{ opacity: 0, x: 35 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
-        className="relative"
-      >
-
-        <div className="relative overflow-hidden rounded-[28px] bg-[#101828] p-6 shadow-2xl shadow-slate-300/50 sm:p-9">
-
-          {/* Decorative Background */}
-          <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-royal/30 blur-[90px]" />
-
-          <div className="relative">
-
-            {/* Top Label */}
-            <div className="flex items-center justify-between gap-3">
-
-              <span className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold uppercase tracking-widest text-slate-300">
-                Ritz Auto Care LLC
-              </span>
-
-              <ShieldCheck size={28} className="text-royal" />
-
-            </div>
-
-            {/* Main Visual */}
-            <div className="my-12 flex flex-col items-center justify-center text-center">
-
-              <div className="grid h-32 w-32 place-items-center rounded-full border border-white/15 bg-white/5 shadow-[0_0_70px_rgba(43,130,230,0.18)]">
-
-                <Wrench
-                  size={65}
-                  strokeWidth={1.2}
-                  className="text-white"
-                />
+                <span className="rounded-full bg-white px-4 py-2 text-xs font-bold text-royal shadow-sm">
+                  09 Services
+                </span>
 
               </div>
 
-              <h3 className="mt-7 text-3xl font-black text-white sm:text-4xl">
-                Driven By
-                <span className="block text-royal">
-                  Excellence.
-                </span>
-              </h3>
+              <motion.div
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ staggerChildren: 0.07 }}
+                className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5"
+              >
 
-              <p className="mt-4 max-w-sm text-sm leading-7 text-slate-400">
-                Professional automotive care backed by
-                experience, technology and dedication.
+                {services.map(({ i: Icon, t }, index) => (
+
+                  <motion.a
+                    key={t}
+                    href="#contact"
+                    variants={up}
+                    whileHover={{ y: -7 }}
+                    className="group relative flex min-h-[180px] flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all duration-300 hover:border-royal/40 hover:shadow-xl hover:shadow-royal/10 sm:min-h-[205px] sm:p-6"
+                  >
+
+                    {/* Background Hover Effect */}
+                    <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-royal/5 transition-all duration-500 group-hover:scale-[2.5] group-hover:bg-royal/10" />
+
+                    {/* Number */}
+                    <div className="relative flex items-center justify-between">
+
+                      <span className="grid h-12 w-12 place-items-center rounded-xl bg-[#F0F4FA] text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white">
+                        <Icon size={25} strokeWidth={1.7} />
+                      </span>
+
+                      <span className="text-xs font-bold tracking-widest text-slate-300 transition-colors group-hover:text-royal">
+                        {(index + 1).toString().padStart(2, "0")}
+                      </span>
+
+                    </div>
+
+                    {/* Title */}
+                    <div className="relative mt-8">
+
+                      <h3 className="text-sm font-extrabold leading-snug text-[#101828] transition-colors group-hover:text-royal sm:text-base">
+                        {t}
+                      </h3>
+
+                      <div className="mt-4 flex items-center justify-between">
+
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 transition-colors group-hover:text-royal">
+                          Explore Service
+                        </span>
+
+                        <ArrowUpRight
+                          size={17}
+                          className="text-slate-400 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-royal"
+                        />
+
+                      </div>
+
+                    </div>
+
+                  </motion.a>
+
+                ))}
+
+              </motion.div>
+
+              {/* Bottom Info */}
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#101828] px-6 py-5 text-white">
+
+                <div>
+                  <p className="font-bold">
+                    Need professional car assistance?
+                  </p>
+
+                  <p className="mt-1 text-xs text-slate-400">
+                    Our team is ready to help you.
+                  </p>
+                </div>
+
+                <a
+                  href={WA}
+                  className="inline-flex items-center gap-2 rounded-lg bg-green-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-green-600"
+                >
+                  <MessageCircle size={17} />
+                  WhatsApp
+                </a>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+
+
+      {/* Premium About + Why Choose Us */}
+
+      <section
+        id="about"
+        className="relative overflow-hidden bg-[#F4F6FA] py-24"
+      >
+        {/* Background Decoration */}
+        <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/50 blur-[120px]" />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+          {/* About Main Content */}
+          <div className="grid items-center gap-14 lg:grid-cols-2">
+
+            {/* Left Content */}
+            <div>
+
+              <span className="inline-flex items-center gap-2 rounded-full border border-royal/20 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-royal shadow-sm">
+                <ShieldCheck size={15} />
+                About Ritz Auto Care
+              </span>
+
+              <h2 className="mt-7 text-4xl font-extrabold leading-[1.12] tracking-tight text-[#101828] sm:text-5xl">
+                More Than Just
+                <span className="block text-royal">
+                  Car Maintenance.
+                </span>
+                We Care About Your Drive.
+              </h2>
+
+              <p className="mt-7 text-base leading-8 text-slate-600 sm:text-lg">
+                Ritz Auto Care is committed to delivering professional
+                automotive repair and maintenance services in Dubai
+                and Abu Dhabi. Our skilled technicians combine
+                advanced diagnostic technology, modern equipment
+                and quality workmanship to keep your vehicle
+                performing at its best.
+              </p>
+
+              <p className="mt-4 text-base leading-8 text-slate-600">
+                From routine servicing to complex mechanical repairs,
+                we focus on reliability, transparency and customer
+                satisfaction at every step.
+              </p>
+
+              {/* Highlights */}
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+
+                {[
+                  "Professional Technicians",
+                  "Advanced Diagnostics",
+                  "Quality Workmanship",
+                  "Customer-Focused Service",
+                ].map((item) => (
+
+                  <div
+                    key={item}
+                    className="flex items-center gap-3"
+                  >
+                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-royal text-white">
+                      <Check size={15} strokeWidth={3} />
+                    </span>
+
+                    <span className="text-sm font-bold text-[#101828]">
+                      {item}
+                    </span>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+              {/* CTA */}
+              <div className="mt-10 flex flex-wrap gap-4">
+
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-3 rounded-lg bg-royal px-7 py-4 font-bold text-white shadow-lg shadow-royal/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#101828]"
+                >
+                  Get in Touch
+                  <ArrowUpRight size={18} />
+                </a>
+
+                <a
+                  href={`tel:${PHONE}`}
+                  className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-7 py-4 font-bold text-[#101828] transition-all hover:border-royal hover:text-royal"
+                >
+                  <Phone size={18} />
+                  Call Us
+                </a>
+
+              </div>
+
+            </div>
+
+
+            {/* Right Image Showcase */}
+            <motion.div
+              initial={{ opacity: 0, x: 35 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="relative pb-8 sm:pb-10"
+            >
+              {/* Main Image */}
+              <div className="group relative h-[420px] overflow-hidden rounded-[28px] bg-[#101828] shadow-2xl shadow-slate-300/50 sm:h-[520px]">
+
+                <Image
+                  src="/about.jpeg"
+                  alt="Ritz Auto Care professional automotive workshop"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+
+                {/* Image Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080B12]/90 via-transparent to-[#080B12]/10" />
+
+                {/* Top Label */}
+                <div className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-4 py-2 backdrop-blur-md sm:left-7 sm:top-7">
+                  <ShieldCheck size={16} className="text-blue-400" />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-white sm:text-xs">
+                    Ritz Auto Care LLC
+                  </span>
+                </div>
+
+                {/* Bottom Image Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-9">
+
+                  <span className="inline-flex rounded-full bg-royal px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white">
+                    Premium Automotive Care
+                  </span>
+
+                  <h3 className="mt-5 text-3xl font-black leading-tight text-white sm:text-4xl">
+                    Driven By
+                    <span className="block text-blue-400">
+                      Excellence.
+                    </span>
+                  </h3>
+
+                  <p className="mt-3 max-w-sm text-sm leading-7 text-white/75">
+                    Professional automotive care backed by experience,
+                    advanced technology and dedicated technicians.
+                  </p>
+
+                </div>
+              </div>
+
+              {/* Floating Experience Badge */}
+              <div className="absolute -bottom-1 -left-2 flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-xl sm:-left-6 sm:p-5">
+
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-royal text-white">
+                  <Award size={25} />
+                </div>
+
+                <div>
+                  <p className="text-2xl font-black text-[#101828]">
+                    20+
+                  </p>
+                  <p className="text-xs font-semibold text-slate-500">
+                    Years of Experience
+                  </p>
+                </div>
+
+              </div>
+
+              {/* Floating Quality Badge */}
+              <div className="absolute right-3 top-24 flex items-center gap-2 rounded-xl border border-white/50 bg-white/95 px-3 py-3 shadow-xl backdrop-blur-md sm:right-5">
+
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-600">
+                  <Check size={19} strokeWidth={3} />
+                </span>
+
+                <div>
+                  <p className="text-xs font-extrabold text-[#101828]">
+                    Quality First
+                  </p>
+                  <p className="text-[10px] text-slate-500">
+                    Every service, every time.
+                  </p>
+                </div>
+
+              </div>
+
+            </motion.div>
+
+
+          </div>
+
+          {/* Why Choose Us */}
+          <div className="mt-32">
+
+            {/* Section Heading */}
+            <div className="mx-auto max-w-2xl text-center">
+
+              <span className="inline-block rounded-full border border-royal/20 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-royal">
+                Why Choose Us
+              </span>
+
+              <h2 className="mt-6 text-3xl font-extrabold leading-tight text-[#101828] sm:text-5xl">
+                The Ritz Auto Care
+                <span className="block text-royal">
+                  Difference.
+                </span>
+              </h2>
+
+              <p className="mt-5 text-base leading-7 text-slate-500">
+                Discover the expertise, technology and commitment
+                that make your vehicle our priority.
               </p>
 
             </div>
 
-            {/* Bottom Stats */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* Feature Cards */}
+            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
-              <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+              {why.map(({ i: Icon, t, d }, k) => (
 
-                <div className="text-3xl font-black text-white">
-                  20+
-                </div>
+                <motion.div
+                  key={t}
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: k * 0.1 }}
+                  whileHover={{ y: -8 }}
+                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition-all duration-300 hover:border-royal/40 hover:shadow-xl hover:shadow-royal/10"
+                >
 
-                <p className="mt-2 text-xs font-medium text-slate-400">
-                  Years of Experience
-                </p>
+                  {/* Card Number */}
+                  <div className="absolute right-6 top-6 text-4xl font-black text-slate-100 transition-colors group-hover:text-royal/10">
+                    0{k + 1}
+                  </div>
 
-              </div>
+                  {/* Icon */}
+                  <div className="relative mb-8 grid h-16 w-16 place-items-center rounded-2xl bg-[#EEF3FB] text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white">
 
-              <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+                    <Icon size={29} strokeWidth={1.7} />
 
-                <div className="text-3xl font-black text-white">
-                  48K+
-                </div>
+                  </div>
 
-                <p className="mt-2 text-xs font-medium text-slate-400">
-                  Vehicles Repaired
-                </p>
+                  {/* Content */}
+                  <h3 className="text-xl font-extrabold text-[#101828] transition-colors group-hover:text-royal">
+                    {t}
+                  </h3>
 
-              </div>
+                  <p className="mt-3 text-sm leading-7 text-slate-500">
+                    {d}
+                  </p>
+
+                  {/* Bottom Accent */}
+                  <div className="mt-7 h-1 w-10 rounded-full bg-royal transition-all duration-300 group-hover:w-full" />
+
+                </motion.div>
+
+              ))}
 
             </div>
 
           </div>
 
         </div>
+      </section>
 
-        {/* Floating Badge */}
-        <div className="absolute -bottom-5 -left-3 flex items-center gap-3 rounded-xl border border-slate-100 bg-white p-4 shadow-xl sm:-left-6">
-
-          <span className="grid h-12 w-12 place-items-center rounded-full bg-royal text-white">
-            <Award size={25} />
-          </span>
-
-          <div>
-            <p className="text-sm font-extrabold text-[#101828]">
-              Quality First
-            </p>
-
-            <p className="text-xs text-slate-500">
-              Every service, every time.
-            </p>
-          </div>
-
-        </div>
-
-      </motion.div>
-
-    </div>
-
-    {/* Why Choose Us */}
-    <div className="mt-32">
-
-      {/* Section Heading */}
-      <div className="mx-auto max-w-2xl text-center">
-
-        <span className="inline-block rounded-full border border-royal/20 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-royal">
-          Why Choose Us
-        </span>
-
-        <h2 className="mt-6 text-3xl font-extrabold leading-tight text-[#101828] sm:text-5xl">
-          The Ritz Auto Care
-          <span className="block text-royal">
-            Difference.
-          </span>
-        </h2>
-
-        <p className="mt-5 text-base leading-7 text-slate-500">
-          Discover the expertise, technology and commitment
-          that make your vehicle our priority.
-        </p>
-
-      </div>
-
-      {/* Feature Cards */}
-      <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
-        {why.map(({ i: Icon, t, d }, k) => (
-
-          <motion.div
-            key={t}
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: k * 0.1 }}
-            whileHover={{ y: -8 }}
-            className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-7 shadow-sm transition-all duration-300 hover:border-royal/40 hover:shadow-xl hover:shadow-royal/10"
-          >
-
-            {/* Card Number */}
-            <div className="absolute right-6 top-6 text-4xl font-black text-slate-100 transition-colors group-hover:text-royal/10">
-              0{k + 1}
-            </div>
-
-            {/* Icon */}
-            <div className="relative mb-8 grid h-16 w-16 place-items-center rounded-2xl bg-[#EEF3FB] text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white">
-
-              <Icon size={29} strokeWidth={1.7} />
-
-            </div>
-
-            {/* Content */}
-            <h3 className="text-xl font-extrabold text-[#101828] transition-colors group-hover:text-royal">
-              {t}
-            </h3>
-
-            <p className="mt-3 text-sm leading-7 text-slate-500">
-              {d}
-            </p>
-
-            {/* Bottom Accent */}
-            <div className="mt-7 h-1 w-10 rounded-full bg-royal transition-all duration-300 group-hover:w-full" />
-
-          </motion.div>
-
-        ))}
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
+      <BeforeAfterSection />
 
 
-     
+      {/* Premium Roadside Assistance */}
 
-{/* Premium Roadside Assistance */}
+      {/* ROADSIDE ASSISTANCE - PREMIUM LIGHT SECTION */}
 
-{/* ROADSIDE ASSISTANCE - PREMIUM LIGHT SECTION */}
-
+    
 <section
   id="roadside"
   className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-24"
 >
   {/* BACKGROUND EFFECTS */}
-
   <div className="pointer-events-none absolute -right-40 top-0 h-[500px] w-[500px] rounded-full bg-blue-100/70 blur-[140px]" />
-
   <div className="pointer-events-none absolute -left-40 bottom-0 h-[400px] w-[400px] rounded-full bg-slate-200/70 blur-[130px]" />
 
   <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
 
     {/* TOP CONTENT */}
-
     <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.95fr] lg:gap-16">
 
       {/* LEFT CONTENT */}
-
       <motion.div
         variants={up}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true }}
       >
-
         {/* BADGE */}
-
         <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-royal sm:text-xs">
           <Truck size={15} />
           Roadside Assistance
         </span>
 
         {/* HEADING */}
-
         <h2 className="mt-6 text-3xl font-extrabold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-[46px]">
           Help is Closer
           <span className="block text-royal">
@@ -983,7 +1115,6 @@ const prevSlide = () => {
         </h2>
 
         {/* DESCRIPTION */}
-
         <p className="mt-5 max-w-xl text-sm leading-7 text-slate-500 sm:text-base sm:leading-8">
           Vehicle trouble shouldn't ruin your journey. From unexpected
           battery failures to flat tyres and fuel emergencies, get
@@ -991,16 +1122,13 @@ const prevSlide = () => {
         </p>
 
         {/* QUICK HIGHLIGHTS */}
-
         <div className="mt-8 grid max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
-
           {[
             { i: ShieldCheck, t: "Professional Support" },
             { i: Wrench, t: "Expert Assistance" },
             { i: Gauge, t: "Reliable Solutions" },
             { i: MapPin, t: "Dubai & Abu Dhabi" },
           ].map(({ i: Icon, t }, index) => (
-
             <motion.div
               key={t}
               initial={{ opacity: 0, y: 15 }}
@@ -1009,7 +1137,6 @@ const prevSlide = () => {
               transition={{ duration: 0.4, delay: index * 0.08 }}
               className="flex items-center gap-3"
             >
-
               <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-royal shadow-sm">
                 <Icon size={19} />
               </div>
@@ -1017,192 +1144,106 @@ const prevSlide = () => {
               <span className="text-xs font-semibold text-slate-700 sm:text-sm">
                 {t}
               </span>
-
             </motion.div>
-
           ))}
-
         </div>
-
       </motion.div>
 
-
-      {/* RIGHT ASSISTANCE DASHBOARD */}
-
+      {/* RIGHT IMAGE SHOWCASE */}
       <motion.div
         variants={up}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true }}
-        className="relative"
+        className="relative pb-8 sm:pb-10"
       >
+        {/* MAIN IMAGE */}
+        <div className="group relative h-[350px] overflow-hidden rounded-[28px] bg-slate-900 shadow-2xl shadow-slate-300/60 sm:h-[450px]">
 
-        <div className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
+          <Image
+            src="/roadside-main.jpeg"
+            alt="Professional roadside vehicle assistance"
+            fill
+            priority={false}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
 
-          {/* DASHBOARD HEADER */}
+          {/* IMAGE OVERLAY */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080B14]/90 via-[#080B14]/15 to-[#080B14]/10" />
 
-          <div className="flex items-center justify-between gap-4">
-
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
-                Ritz Auto Care
-              </p>
-
-              <h3 className="mt-2 text-xl font-extrabold text-slate-900">
-                Assistance Centre
-              </h3>
-
-              <p className="mt-1 text-xs text-slate-500">
-                Your roadside support partner
-              </p>
-            </div>
-
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-blue-100 bg-blue-50 text-royal">
-              <ShieldCheck size={25} />
-            </div>
-
+          {/* TOP LABEL */}
+          <div className="absolute left-5 top-5 sm:left-7 sm:top-7">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+              <ShieldCheck size={15} />
+              Ritz Auto Care LLC
+            </span>
           </div>
 
+          {/* BOTTOM CONTENT */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
 
-          {/* MAIN VISUAL */}
+            <span className="inline-flex items-center rounded-full bg-royal px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-white">
+              Professional Roadside Support
+            </span>
 
-          <div className="relative mt-7 overflow-hidden rounded-2xl border border-slate-200 bg-[#F5F8FC] p-5 sm:p-6">
-
-            <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-blue-100/80 blur-3xl" />
-
-            <div className="relative flex items-center justify-between gap-3">
-
-              <div className="min-w-0">
-
-                <span className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  Assistance Services
-                </span>
-
-                <h4 className="mt-5 text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl">
-                  Ready for the
-                  <span className="block text-royal">
-                    Unexpected.
-                  </span>
-                </h4>
-
-                <p className="mt-3 max-w-[230px] text-xs leading-6 text-slate-500 sm:text-sm">
-                  Professional solutions for common roadside vehicle emergencies.
-                </p>
-
-              </div>
-
-              {/* VEHICLE ICON */}
-
-              <div className="hidden h-28 w-28 shrink-0 place-items-center rounded-full border border-blue-100 bg-white shadow-sm sm:grid">
-
-                <div className="grid h-20 w-20 place-items-center rounded-full bg-blue-50 text-royal">
-                  <Car size={46} strokeWidth={1.3} />
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          {/* AVAILABLE ASSISTANCE */}
-
-          <div className="mt-7">
-
-            <div className="mb-4 flex items-center justify-between">
-
-              <h4 className="text-sm font-bold text-slate-900">
-                Available Assistance
-              </h4>
-
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold text-slate-500">
-                04 Services
+            <h3 className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl">
+              Help When You
+              <span className="block text-blue-400">
+                Need It Most.
               </span>
+            </h3>
 
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-
-              {road.map(({ i: Icon, t }) => (
-
-                <div
-                  key={t}
-                  className="flex min-h-[85px] items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-md sm:p-4"
-                >
-
-                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-blue-50 text-royal sm:h-10 sm:w-10">
-                    <Icon size={19} />
-                  </div>
-
-                  <span className="text-[10px] font-bold leading-5 text-slate-700 sm:text-xs">
-                    {t}
-                  </span>
-
-                </div>
-
-              ))}
-
-            </div>
+            <p className="mt-3 max-w-sm text-xs leading-6 text-white/75 sm:text-sm">
+              Reliable vehicle assistance for unexpected
+              situations on the road.
+            </p>
 
           </div>
-
-
-          {/* BOTTOM INFORMATION */}
-
-          <div className="mt-6 flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue-50 text-royal">
-              <MapPin size={20} />
-            </div>
-
-            <div>
-              <p className="text-xs font-bold text-slate-900 sm:text-sm">
-                Serving Dubai & Abu Dhabi
-              </p>
-
-              <p className="mt-1 text-[10px] leading-5 text-slate-500 sm:text-xs">
-                Roadside assistance for your vehicle support needs.
-              </p>
-            </div>
-
-          </div>
-
         </div>
 
-
         {/* FLOATING BADGE */}
+        <div className="absolute -bottom-1 -left-2 flex items-center gap-3 rounded-xl border border-slate-100 bg-white px-4 py-3 shadow-xl sm:-left-5 sm:px-5">
 
-        <div className="absolute -bottom-5 -left-2 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-xl sm:-left-5">
-
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-emerald-50 text-emerald-600">
-            <Check size={19} />
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-royal text-white">
+            <Check size={21} strokeWidth={2.5} />
           </div>
 
           <div>
-            <p className="text-xs font-bold text-slate-900">
+            <p className="text-xs font-extrabold text-slate-900 sm:text-sm">
               Expert Vehicle Care
             </p>
-
-            <p className="text-[10px] text-slate-500">
+            <p className="mt-1 text-[10px] text-slate-500">
               Professional assistance
             </p>
           </div>
 
         </div>
 
-      </motion.div>
+        {/* TOP FLOATING BADGE */}
+        <div className="absolute right-3 top-20 flex items-center gap-2 rounded-xl border border-white/50 bg-white/95 px-3 py-3 shadow-xl backdrop-blur-md sm:right-5">
 
+          <span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-600">
+            <ShieldCheck size={19} />
+          </span>
+
+          <div>
+            <p className="text-xs font-extrabold text-slate-900">
+              Quality Support
+            </p>
+            <p className="text-[10px] text-slate-500">
+              Customer focused
+            </p>
+          </div>
+
+        </div>
+      </motion.div>
     </div>
 
-
     {/* SERVICES SECTION HEADING */}
-
     <div className="mb-8 mt-24 flex flex-wrap items-end justify-between gap-5">
 
       <div>
-
         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-royal sm:text-xs">
           Our Services
         </span>
@@ -1218,625 +1259,637 @@ const prevSlide = () => {
           Reliable assistance to help you handle unexpected vehicle
           problems and get back on the road.
         </p>
-
       </div>
 
       <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[10px] font-bold text-slate-600 shadow-sm sm:text-xs">
         04 Assistance Categories
       </span>
-
     </div>
 
-
     {/* ROAD SERVICE CARDS */}
-
     <motion.div
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-60px" }}
       transition={{ staggerChildren: 0.1 }}
-      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
     >
+      {road.map(({ i: Icon, t, d }, index) => {
 
-      {road.map(({ i: Icon, t, d }, index) => (
+        const roadsideImages = [
+          "/battery-jumpstart.jpeg",
+          "/jump-start.jpeg",
+          "/flat-tyre.jpeg",
+          "/fuel-delivery.jpeg",
+        ];
 
-        <motion.div
-          key={t}
-          variants={up}
-          whileHover={{ y: -6 }}
-          className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-slate-200/60"
-        >
-
-          {/* DECORATIVE GLOW */}
-
-          <div className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-blue-50 transition-transform duration-500 group-hover:scale-150" />
-
-          {/* CARD TOP */}
-
-          <div className="relative flex items-center justify-between">
-
-            <div className="grid h-12 w-12 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white">
-              <Icon size={24} strokeWidth={1.7} />
-            </div>
-
-            <span className="text-3xl font-black text-slate-100">
-              0{index + 1}
-            </span>
-
-          </div>
-
-          {/* CARD CONTENT */}
-
-          <div className="relative mt-7">
-
-            <h3 className="text-base font-extrabold text-slate-900 sm:text-lg">
-              {t}
-            </h3>
-
-            <p className="mt-3 min-h-[84px] text-xs leading-6 text-slate-500 sm:text-sm sm:leading-7">
-              {d}
-            </p>
-
-            <a
-              href={`tel:${PHONE}`}
-              className="mt-5 inline-flex items-center gap-2 border-t border-slate-100 pt-4 text-xs font-bold text-royal transition-colors hover:text-slate-900 sm:text-sm"
-            >
-              Request Assistance
-              <ArrowUpRight size={16} />
-            </a>
-
-          </div>
-
-        </motion.div>
-
-      ))}
-
-    </motion.div>
-
-  </div>
-</section>
-
-
-
-
-   
-{/* Premium How It Works Section */}
-
-<section
-  id="how-it-works"
-  className="relative overflow-hidden bg-[#F4F6FA] py-24"
->
-  {/* Background Effects */}
-  <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/60 blur-[120px]" />
-  <div className="absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-slate-200/70 blur-[120px]" />
-
-  <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-    {/* Heading */}
-    <div className="mx-auto max-w-3xl text-center">
-
-      <span className="inline-flex items-center gap-2 rounded-full border border-royal/20 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-royal shadow-sm">
-        <CalendarCheck size={15} />
-        Simple Service Process
-      </span>
-
-      <h2 className="mt-7 text-4xl font-extrabold leading-tight text-[#101828] sm:text-5xl">
-        Four Easy Steps to
-        <span className="block text-royal">
-          a Better Driving Experience.
-        </span>
-      </h2>
-
-      <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-slate-500">
-        Getting your car serviced has never been easier.
-        Enjoy a smooth, transparent and hassle-free experience
-        from booking to delivery.
-      </p>
-
-    </div>
-
-    {/* Steps */}
-    <div className="relative mt-16">
-
-      {/* Desktop Connecting Line */}
-      <div className="absolute left-[12.5%] right-[12.5%] top-11 hidden border-t-2 border-dashed border-royal/30 lg:block" />
-
-      <motion.div
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ staggerChildren: 0.12 }}
-        className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-      >
-
-        {steps.map(({ i: Icon, t, d }, index) => (
-
+        return (
           <motion.div
             key={t}
             variants={up}
-            whileHover={{ y: -8 }}
-            className="group relative rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-sm transition-all duration-300 hover:border-royal/40 hover:shadow-xl hover:shadow-royal/10"
+            whileHover={{ y: -6 }}
+            className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-slate-200/60"
           >
 
-            {/* Step Icon */}
-            <div className="relative z-10 mx-auto grid h-[88px] w-[88px] place-items-center rounded-full border-[6px] border-[#F4F6FA] bg-royal text-white shadow-lg shadow-royal/20 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#101828]">
+            {/* SERVICE IMAGE */}
+            <div className="relative -mx-6 -mt-6 mb-6 h-44 overflow-hidden bg-slate-100">
 
-              <Icon size={31} strokeWidth={1.7} />
+              <Image
+                src={roadsideImages[index]}
+                alt={`${t} roadside assistance`}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+              />
 
-              {/* Step Number */}
-              <span className="absolute -right-2 -top-2 grid h-8 w-8 place-items-center rounded-full border-[3px] border-white bg-[#101828] text-xs font-extrabold text-white">
-                {String(index + 1).padStart(2, "0")}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+
+              {/* IMAGE LABEL */}
+              <span className="absolute bottom-3 left-3 rounded-md bg-white/95 px-3 py-1.5 text-[10px] font-bold text-slate-800 shadow">
+                {t}
               </span>
 
+              {/* NUMBER */}
+              <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/95 text-xs font-black text-royal shadow">
+                0{index + 1}
+              </span>
             </div>
 
-            {/* Step Content */}
-            <div className="mt-7">
+            {/* CARD ICON */}
+            <div className="relative grid h-12 w-12 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white">
+              <Icon size={24} strokeWidth={1.7} />
+            </div>
 
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-royal">
-                Step {index + 1}
-              </span>
+            {/* CARD CONTENT */}
+            <div className="relative mt-5">
 
-              <h3 className="mt-3 text-xl font-extrabold text-[#101828] transition-colors group-hover:text-royal">
+              <h3 className="text-base font-extrabold text-slate-900 sm:text-lg">
                 {t}
               </h3>
 
-              <p className="mt-3 text-sm leading-7 text-slate-500">
+              <p className="mt-3 min-h-[84px] text-xs leading-6 text-slate-500 sm:text-sm sm:leading-7">
                 {d}
               </p>
 
+              <a
+                href={`tel:${PHONE}`}
+                className="mt-5 inline-flex items-center gap-2 border-t border-slate-100 pt-4 text-xs font-bold text-royal transition-colors hover:text-slate-900 sm:text-sm"
+              >
+                Request Assistance
+                <ArrowUpRight size={16} />
+              </a>
+
             </div>
-
-            {/* Bottom Accent */}
-            <div className="mx-auto mt-7 h-1 w-10 rounded-full bg-royal transition-all duration-300 group-hover:w-full" />
-
           </motion.div>
-
-        ))}
-
-      </motion.div>
-
-    </div>
-
-
+        );
+      })}
+    </motion.div>
 
   </div>
 </section>
 
 
-  
-
-{/* FREE BENEFITS - PREMIUM LIGHT SECTION */}
-
-<section className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-24">
-
-  {/* BACKGROUND EFFECTS */}
-
-  <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-blue-100/70 blur-[120px]" />
-
-  <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-slate-200/70 blur-[120px]" />
-
-  <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:px-10">
-
-    {/* LEFT CONTENT */}
-
-    <motion.div
-      variants={up}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true }}
-    >
-
-      {/* BADGE */}
-
-      <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-royal sm:text-xs">
-        <Sparkles size={14} />
-        Exclusive Benefits
-      </span>
-
-      {/* HEADING */}
-
-      <h2 className="mt-6 max-w-xl text-3xl font-extrabold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-[46px]">
-        More care.
-        <span className="block text-royal">
-          Zero extra cost.
-        </span>
-      </h2>
-
-      {/* DESCRIPTION */}
-
-      <p className="mt-5 max-w-lg text-sm leading-7 text-slate-500 sm:text-base">
-        Every booking comes with extra care and convenience.
-        Enjoy complimentary services designed to make your
-        car maintenance experience effortless.
-      </p>
-
-      {/* BENEFITS LIST */}
-
-      <div className="mt-9 space-y-7">
-
-        {[
-          {
-            i: Truck,
-            t: "Free Pick-up & Drop-off",
-            d: "Convenient vehicle collection and delivery from your home or office.",
-          },
-          {
-            i: ShieldCheck,
-            t: "Free General Inspection",
-            d: "A detailed multi-point check to help identify potential vehicle issues.",
-          },
-          {
-            i: Droplets,
-            t: "Free Exterior Car Wash",
-            d: "Give your vehicle a fresh, clean finish with every service booking.",
-          },
-        ].map(({ i: Icon, t, d }, index) => (
-
-          <motion.div
-            key={t}
-            initial={{ opacity: 0, x: -18 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, delay: index * 0.1 }}
-            className="group flex gap-4"
-          >
-
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-royal shadow-sm transition-all duration-300 group-hover:border-royal group-hover:bg-royal group-hover:text-white sm:h-14 sm:w-14">
-              <Icon size={23} strokeWidth={1.8} />
-            </div>
-
-            <div className="min-w-0 flex-1">
-
-              <div className="flex flex-wrap items-center gap-2.5">
-
-                <h3 className="text-sm font-bold text-slate-900 sm:text-base">
-                  {t}
-                </h3>
-
-                <span className="rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
-                  Complimentary
-                </span>
-
-              </div>
-
-              <p className="mt-2 max-w-md text-xs leading-6 text-slate-500 sm:text-sm">
-                {d}
-              </p>
-
-            </div>
-
-          </motion.div>
-
-        ))}
-
-      </div>
-
-      {/* CTA BUTTONS */}
-
-      <div className="mt-9 flex flex-wrap gap-3">
-
-        <a
-          href={`tel:${PHONE}`}
-          className="group inline-flex items-center gap-2 rounded-full bg-royal px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-900/15 transition-all duration-300 hover:-translate-y-1 hover:bg-[#174DAA] sm:text-sm"
-        >
-          Book Your Service
-          <ArrowRight
-            size={16}
-            className="transition-transform group-hover:translate-x-1"
-          />
-        </a>
-
-        <a
-          href="#contact"
-          className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:-translate-y-1 hover:border-royal hover:text-royal sm:text-sm"
-        >
-          Explore Services
-          <ArrowUpRight size={15} />
-        </a>
-
-      </div>
-
-    </motion.div>
 
 
-    {/* RIGHT PREMIUM SHOWCASE */}
 
-    <motion.div
-      variants={up}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true }}
-      className="relative"
-    >
 
-      <div className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
+      {/* Premium How It Works Section */}
 
-        {/* SHOWCASE HEADER */}
+      <section
+        id="how-it-works"
+        className="relative overflow-hidden bg-[#F4F6FA] py-24"
+      >
+        {/* Background Effects */}
+        <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/60 blur-[120px]" />
+        <div className="absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-slate-200/70 blur-[120px]" />
 
-        <div className="flex items-center justify-between gap-4">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-          <div>
+          {/* Heading */}
+          <div className="mx-auto max-w-3xl text-center">
 
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
-              Ritz Auto Care
-            </p>
+            <span className="inline-flex items-center gap-2 rounded-full border border-royal/20 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-royal shadow-sm">
+              <CalendarCheck size={15} />
+              Simple Service Process
+            </span>
 
-            <h3 className="mt-2 text-xl font-extrabold text-slate-900">
-              Your Benefits Package
-            </h3>
+            <h2 className="mt-7 text-4xl font-extrabold leading-tight text-[#101828] sm:text-5xl">
+              Four Easy Steps to
+              <span className="block text-royal">
+                a Better Driving Experience.
+              </span>
+            </h2>
 
-            <p className="mt-1 text-xs text-slate-500">
-              Added care with your service booking
+            <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-slate-500">
+              Getting your car serviced has never been easier.
+              Enjoy a smooth, transparent and hassle-free experience
+              from booking to delivery.
             </p>
 
           </div>
 
-          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-blue-100 bg-blue-50 text-royal">
-            <Award size={25} />
+          {/* Steps */}
+          <div className="relative mt-16">
+
+            {/* Desktop Connecting Line */}
+            <div className="absolute left-[12.5%] right-[12.5%] top-11 hidden border-t-2 border-dashed border-royal/30 lg:block" />
+
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ staggerChildren: 0.12 }}
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            >
+
+              {steps.map(({ i: Icon, t, d }, index) => (
+
+                <motion.div
+                  key={t}
+                  variants={up}
+                  whileHover={{ y: -8 }}
+                  className="group relative rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-sm transition-all duration-300 hover:border-royal/40 hover:shadow-xl hover:shadow-royal/10"
+                >
+
+                  {/* Step Icon */}
+                  <div className="relative z-10 mx-auto grid h-[88px] w-[88px] place-items-center rounded-full border-[6px] border-[#F4F6FA] bg-royal text-white shadow-lg shadow-royal/20 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#101828]">
+
+                    <Icon size={31} strokeWidth={1.7} />
+
+                    {/* Step Number */}
+                    <span className="absolute -right-2 -top-2 grid h-8 w-8 place-items-center rounded-full border-[3px] border-white bg-[#101828] text-xs font-extrabold text-white">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                  </div>
+
+                  {/* Step Content */}
+                  <div className="mt-7">
+
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-royal">
+                      Step {index + 1}
+                    </span>
+
+                    <h3 className="mt-3 text-xl font-extrabold text-[#101828] transition-colors group-hover:text-royal">
+                      {t}
+                    </h3>
+
+                    <p className="mt-3 text-sm leading-7 text-slate-500">
+                      {d}
+                    </p>
+
+                  </div>
+
+                  {/* Bottom Accent */}
+                  <div className="mx-auto mt-7 h-1 w-10 rounded-full bg-royal transition-all duration-300 group-hover:w-full" />
+
+                </motion.div>
+
+              ))}
+
+            </motion.div>
+
           </div>
+
+
 
         </div>
+      </section>
 
 
-        {/* COMPLIMENTARY CARE PACKAGE */}
 
-        <div className="relative mt-7 overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-[#EFF6FF] via-white to-[#F5F8FC] p-6 sm:p-7">
 
-          {/* DECORATIVE EFFECT */}
+      {/* FREE BENEFITS - PREMIUM LIGHT SECTION */}
 
-          <div className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-blue-200/40 blur-3xl" />
+      <section className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-24">
 
-          <div className="relative">
+        {/* BACKGROUND EFFECTS */}
 
-            <div className="flex items-center justify-between gap-3">
+        <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-blue-100/70 blur-[120px]" />
 
-              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
-                <Check size={12} />
-                Included Benefits
-              </span>
+        <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-slate-200/70 blur-[120px]" />
 
-              <Sparkles size={19} className="text-royal" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:px-10">
 
-            </div>
+          {/* LEFT CONTENT */}
 
-            <h4 className="mt-5 text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl">
-              Complimentary
+          <motion.div
+            variants={up}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+          >
+
+            {/* BADGE */}
+
+            <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-royal sm:text-xs">
+              <Sparkles size={14} />
+              Exclusive Benefits
+            </span>
+
+            {/* HEADING */}
+
+            <h2 className="mt-6 max-w-xl text-3xl font-extrabold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-[46px]">
+              More care.
               <span className="block text-royal">
-                Care Package.
+                Zero extra cost.
               </span>
-            </h4>
+            </h2>
 
-            <p className="mt-3 max-w-sm text-xs leading-6 text-slate-500 sm:text-sm">
-              Enjoy additional convenience and care with your
-              vehicle service booking.
+            {/* DESCRIPTION */}
+
+            <p className="mt-5 max-w-lg text-sm leading-7 text-slate-500 sm:text-base">
+              Every booking comes with extra care and convenience.
+              Enjoy complimentary services designed to make your
+              car maintenance experience effortless.
             </p>
 
-            {/* BENEFIT TAGS */}
+            {/* BENEFITS LIST */}
 
-            <div className="mt-6 flex flex-wrap gap-2">
+            <div className="mt-9 space-y-7">
 
               {[
-                "Vehicle Collection",
-                "General Inspection",
-                "Exterior Wash",
-              ].map((item) => (
+                {
+                  i: Truck,
+                  t: "Free Pick-up & Drop-off",
+                  d: "Convenient vehicle collection and delivery from your home or office.",
+                },
+                {
+                  i: ShieldCheck,
+                  t: "Free General Inspection",
+                  d: "A detailed multi-point check to help identify potential vehicle issues.",
+                },
+                {
+                  i: Droplets,
+                  t: "Free Exterior Car Wash",
+                  d: "Give your vehicle a fresh, clean finish with every service booking.",
+                },
+              ].map(({ i: Icon, t, d }, index) => (
 
-                <span
-                  key={item}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-2 text-[9px] font-semibold text-slate-600 shadow-sm sm:text-[10px]"
+                <motion.div
+                  key={t}
+                  initial={{ opacity: 0, x: -18 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: index * 0.1 }}
+                  className="group flex gap-4"
                 >
-                  <Check size={12} className="text-emerald-600" />
-                  {item}
-                </span>
+
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-royal shadow-sm transition-all duration-300 group-hover:border-royal group-hover:bg-royal group-hover:text-white sm:h-14 sm:w-14">
+                    <Icon size={23} strokeWidth={1.8} />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+
+                    <div className="flex flex-wrap items-center gap-2.5">
+
+                      <h3 className="text-sm font-bold text-slate-900 sm:text-base">
+                        {t}
+                      </h3>
+
+                      <span className="rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
+                        Complimentary
+                      </span>
+
+                    </div>
+
+                    <p className="mt-2 max-w-md text-xs leading-6 text-slate-500 sm:text-sm">
+                      {d}
+                    </p>
+
+                  </div>
+
+                </motion.div>
 
               ))}
 
             </div>
 
-          </div>
+            {/* CTA BUTTONS */}
 
-        </div>
+            <div className="mt-9 flex flex-wrap gap-3">
 
-
-        {/* SERVICE TIMELINE */}
-
-        <div className="mt-8">
-
-          <div className="mb-6 flex items-center justify-between">
-
-            <h4 className="text-sm font-bold text-slate-900">
-              How We Care For Your Car
-            </h4>
-
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              04 Steps
-            </span>
-
-          </div>
-
-          <div className="space-y-6">
-
-            {[
-              {
-                i: Truck,
-                t: "We collect your car",
-                d: "From your home or workplace",
-              },
-              {
-                i: ClipboardCheck,
-                t: "We inspect your vehicle",
-                d: "General health check included",
-              },
-              {
-                i: Droplets,
-                t: "We clean your car",
-                d: "Complimentary exterior wash",
-              },
-              {
-                i: Car,
-                t: "We deliver it back",
-                d: "Convenient vehicle delivery",
-              },
-            ].map(({ i: Icon, t, d }, index) => (
-
-              <motion.div
-                key={t}
-                initial={{ opacity: 0, x: 12 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="flex items-center gap-4"
+              <a
+                href={`tel:${PHONE}`}
+                className="group inline-flex items-center gap-2 rounded-full bg-royal px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-900/15 transition-all duration-300 hover:-translate-y-1 hover:bg-[#174DAA] sm:text-sm"
               >
+                Book Your Service
+                <ArrowRight
+                  size={16}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </a>
 
-                <div className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-royal">
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3.5 text-xs font-bold text-slate-700 transition-all duration-300 hover:-translate-y-1 hover:border-royal hover:text-royal sm:text-sm"
+              >
+                Explore Services
+                <ArrowUpRight size={15} />
+              </a>
 
-                  <Icon size={19} />
+            </div>
 
-                  {index !== 3 && (
-                    <span className="absolute -bottom-6 left-1/2 h-4 w-px bg-slate-200" />
-                  )}
+          </motion.div>
 
-                </div>
 
-                <div className="min-w-0">
+          {/* RIGHT PREMIUM SHOWCASE */}
 
-                  <h4 className="text-xs font-bold text-slate-800 sm:text-sm">
-                    {t}
-                  </h4>
+          <motion.div
+            variants={up}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="relative"
+          >
 
-                  <p className="mt-1 text-[10px] text-slate-500 sm:text-xs">
-                    {d}
+            <div className="relative overflow-hidden rounded-[28px] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
+
+              {/* SHOWCASE HEADER */}
+
+              <div className="flex items-center justify-between gap-4">
+
+                <div>
+
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+                    Ritz Auto Care
+                  </p>
+
+                  <h3 className="mt-2 text-xl font-extrabold text-slate-900">
+                    Your Benefits Package
+                  </h3>
+
+                  <p className="mt-1 text-xs text-slate-500">
+                    Added care with your service booking
                   </p>
 
                 </div>
 
-                <div className="ml-auto shrink-0 text-emerald-600">
-                  <Check size={17} />
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-blue-100 bg-blue-50 text-royal">
+                  <Award size={25} />
                 </div>
 
-              </motion.div>
+              </div>
 
-            ))}
 
-          </div>
+              {/* COMPLIMENTARY CARE PACKAGE */}
+
+              <div className="relative mt-7 overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-[#EFF6FF] via-white to-[#F5F8FC] p-6 sm:p-7">
+
+                {/* DECORATIVE EFFECT */}
+
+                <div className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-blue-200/40 blur-3xl" />
+
+                <div className="relative">
+
+                  <div className="flex items-center justify-between gap-3">
+
+                    <span className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider text-emerald-700">
+                      <Check size={12} />
+                      Included Benefits
+                    </span>
+
+                    <Sparkles size={19} className="text-royal" />
+
+                  </div>
+
+                  <h4 className="mt-5 text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl">
+                    Complimentary
+                    <span className="block text-royal">
+                      Care Package.
+                    </span>
+                  </h4>
+
+                  <p className="mt-3 max-w-sm text-xs leading-6 text-slate-500 sm:text-sm">
+                    Enjoy additional convenience and care with your
+                    vehicle service booking.
+                  </p>
+
+                  {/* BENEFIT TAGS */}
+
+                  <div className="mt-6 flex flex-wrap gap-2">
+
+                    {[
+                      "Vehicle Collection",
+                      "General Inspection",
+                      "Exterior Wash",
+                    ].map((item) => (
+
+                      <span
+                        key={item}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-2 text-[9px] font-semibold text-slate-600 shadow-sm sm:text-[10px]"
+                      >
+                        <Check size={12} className="text-emerald-600" />
+                        {item}
+                      </span>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              {/* SERVICE TIMELINE */}
+
+              <div className="mt-8">
+
+                <div className="mb-6 flex items-center justify-between">
+
+                  <h4 className="text-sm font-bold text-slate-900">
+                    How We Care For Your Car
+                  </h4>
+
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    04 Steps
+                  </span>
+
+                </div>
+
+                <div className="space-y-6">
+
+                  {[
+                    {
+                      i: Truck,
+                      t: "We collect your car",
+                      d: "From your home or workplace",
+                    },
+                    {
+                      i: ClipboardCheck,
+                      t: "We inspect your vehicle",
+                      d: "General health check included",
+                    },
+                    {
+                      i: Droplets,
+                      t: "We clean your car",
+                      d: "Complimentary exterior wash",
+                    },
+                    {
+                      i: Car,
+                      t: "We deliver it back",
+                      d: "Convenient vehicle delivery",
+                    },
+                  ].map(({ i: Icon, t, d }, index) => (
+
+                    <motion.div
+                      key={t}
+                      initial={{ opacity: 0, x: 12 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: index * 0.08 }}
+                      className="flex items-center gap-4"
+                    >
+
+                      <div className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-royal">
+
+                        <Icon size={19} />
+
+                        {index !== 3 && (
+                          <span className="absolute -bottom-6 left-1/2 h-4 w-px bg-slate-200" />
+                        )}
+
+                      </div>
+
+                      <div className="min-w-0">
+
+                        <h4 className="text-xs font-bold text-slate-800 sm:text-sm">
+                          {t}
+                        </h4>
+
+                        <p className="mt-1 text-[10px] text-slate-500 sm:text-xs">
+                          {d}
+                        </p>
+
+                      </div>
+
+                      <div className="ml-auto shrink-0 text-emerald-600">
+                        <Check size={17} />
+                      </div>
+
+                    </motion.div>
+
+                  ))}
+
+                </div>
+
+              </div>
+
+
+              {/* BOTTOM TRUST STRIP */}
+
+              <div className="mt-8 flex items-center justify-between gap-4 border-t border-slate-100 pt-6">
+
+                <div>
+
+                  <p className="text-xs font-bold text-slate-900 sm:text-sm">
+                    Premium care, every time.
+                  </p>
+
+                  <p className="mt-1 text-[10px] text-slate-500 sm:text-xs">
+                    Your convenience is our priority.
+                  </p>
+
+                </div>
+
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blue-50 text-royal">
+                  <ShieldCheck size={23} />
+                </div>
+
+              </div>
+
+            </div>
+
+
+            {/* FLOATING BADGE */}
+
+            <div className="absolute -bottom-5 -left-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-xl sm:-left-5 sm:px-5 sm:py-4">
+
+              <div className="flex items-center gap-3">
+
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-emerald-50 text-emerald-600">
+                  <Check size={19} />
+                </div>
+
+                <div>
+
+                  <p className="text-xs font-bold text-slate-900">
+                    Extra Care Included
+                  </p>
+
+                  <p className="text-[10px] text-slate-500">
+                    Complimentary benefits
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </motion.div>
 
         </div>
 
+      </section>
 
-        {/* BOTTOM TRUST STRIP */}
 
-        <div className="mt-8 flex items-center justify-between gap-4 border-t border-slate-100 pt-6">
 
-          <div>
 
-            <p className="text-xs font-bold text-slate-900 sm:text-sm">
-              Premium care, every time.
+      {/* Premium Automotive Brands Showcase */}
+
+      <section
+        id="brands"
+        className="relative overflow-hidden bg-[#F3F5F8] py-24"
+      >
+        {/* Background decoration */}
+        <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/60 blur-[120px]" />
+        <div className="absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-slate-200/70 blur-[120px]" />
+
+        <div className="relative mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-10">
+
+          {/* Heading */}
+          <div className="mb-14 text-center">
+
+            <span className="inline-flex rounded-full border border-royal/20 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.25em] text-royal shadow-sm">
+              Our Automotive Brands
+            </span>
+
+            <h2 className="mt-6 text-3xl font-extrabold leading-tight text-[#101828] sm:text-5xl">
+              Experts in Every
+              <span className="block text-royal">
+                Automotive Brand.
+              </span>
+            </h2>
+
+            <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base">
+              From luxury European vehicles to Japanese and American
+              automobiles, our experts deliver professional care
+              for all leading automotive brands.
             </p>
 
-            <p className="mt-1 text-[10px] text-slate-500 sm:text-xs">
-              Your convenience is our priority.
-            </p>
+            <div className="mx-auto mt-7 h-1 w-20 rounded-full bg-royal" />
 
           </div>
 
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blue-50 text-royal">
-            <ShieldCheck size={23} />
-          </div>
+          {/* Brand Logo Grid */}
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4 lg:grid-cols-8 xl:grid-cols-10">
 
-        </div>
+            {brands.slice(0, 50).map((brand, index) => (
 
-      </div>
-
-
-      {/* FLOATING BADGE */}
-
-      <div className="absolute -bottom-5 -left-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-xl sm:-left-5 sm:px-5 sm:py-4">
-
-        <div className="flex items-center gap-3">
-
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-emerald-50 text-emerald-600">
-            <Check size={19} />
-          </div>
-
-          <div>
-
-            <p className="text-xs font-bold text-slate-900">
-              Extra Care Included
-            </p>
-
-            <p className="text-[10px] text-slate-500">
-              Complimentary benefits
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </motion.div>
-
-  </div>
-
-</section>
-
-
-
-
-{/* Premium Automotive Brands Showcase */}
-
-<section
-  id="brands"
-  className="relative overflow-hidden bg-[#F3F5F8] py-24"
->
-  {/* Background decoration */}
-  <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/60 blur-[120px]" />
-  <div className="absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-slate-200/70 blur-[120px]" />
-
-  <div className="relative mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-10">
-
-    {/* Heading */}
-    <div className="mb-14 text-center">
-
-      <span className="inline-flex rounded-full border border-royal/20 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.25em] text-royal shadow-sm">
-        Our Automotive Brands
-      </span>
-
-      <h2 className="mt-6 text-3xl font-extrabold leading-tight text-[#101828] sm:text-5xl">
-        Experts in Every
-        <span className="block text-royal">
-          Automotive Brand.
-        </span>
-      </h2>
-
-      <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base">
-        From luxury European vehicles to Japanese and American
-        automobiles, our experts deliver professional care
-        for all leading automotive brands.
-      </p>
-
-      <div className="mx-auto mt-7 h-1 w-20 rounded-full bg-royal" />
-
-    </div>
-
-    {/* Brand Logo Grid */}
-    <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4 lg:grid-cols-8 xl:grid-cols-10">
-
-      {brands.slice(0, 50).map((brand, index) => (
-
-        <motion.div
-          key={brand.name}
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{
-            duration: 0.4,
-            delay: (index % 10) * 0.035,
-          }}
-          whileHover={{ y: -5, scale: 1.035 }}
-          title={brand.name}
-          className="
+              <motion.div
+                key={brand.name}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.4,
+                  delay: (index % 10) * 0.035,
+                }}
+                whileHover={{ y: -5, scale: 1.035 }}
+                title={brand.name}
+                className="
             group relative flex aspect-square
             items-center justify-center
             overflow-hidden rounded-2xl
@@ -1848,350 +1901,658 @@ const prevSlide = () => {
             hover:shadow-xl hover:shadow-slate-300/50
             sm:p-5 lg:p-6
           "
-        >
+              >
 
-          {/* Hover background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white to-slate-50 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                {/* Hover background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white to-slate-50 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-          {/* Logo */}
-          <div className="relative z-10 h-full w-full">
+                {/* Logo */}
+                <div className="relative z-10 h-full w-full">
 
-            <Image
-              src={brand.logo}
-              alt={`${brand.name} logo`}
-              fill
-              sizes="(max-width: 640px) 30vw, (max-width: 1024px) 18vw, 10vw"
-              className="
+                  <Image
+                    src={brand.logo}
+                    alt={`${brand.name} logo`}
+                    fill
+                    sizes="(max-width: 640px) 30vw, (max-width: 1024px) 18vw, 10vw"
+                    className="
                 object-contain
                 opacity-100
                 transition-transform duration-500
                 group-hover:scale-110
               "
-            />
-
-          </div>
-
-          {/* Bottom hover accent */}
-          <div className="absolute bottom-0 left-1/2 h-1 w-0 -translate-x-1/2 rounded-full bg-royal transition-all duration-300 group-hover:w-1/2" />
-
-        </motion.div>
-
-      ))}
-
-    </div>
-
-    {/* Bottom CTA */}
-    <div className="mt-14 text-center">
-
-      <p className="mb-5 text-sm text-slate-500">
-        Your vehicle deserves professional attention.
-      </p>
-
-      <a
-        href="#contact"
-        className="inline-flex items-center gap-2 rounded-lg bg-royal px-8 py-4 text-sm font-bold text-white shadow-lg shadow-royal/20 transition-all hover:-translate-y-1 hover:bg-[#101828]"
-      >
-        Book Your Service
-        <ArrowUpRight size={18} />
-      </a>
-
-    </div>
-
-  </div>
-</section>
-
-
-
-
-{/* PREMIUM CUSTOMER REVIEWS MARQUEE */}
-
-<section
-  id="reviews"
-  className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-24"
->
-  {/* BACKGROUND EFFECTS */}
-
-  <div className="pointer-events-none absolute left-1/2 top-0 h-80 w-80 -translate-x-1/2 rounded-full bg-blue-100/70 blur-[120px]" />
-
-  <div className="pointer-events-none absolute -right-40 bottom-0 h-80 w-80 rounded-full bg-slate-200/60 blur-[120px]" />
-
-  <div className="relative">
-
-    {/* SECTION HEADING */}
-
-    <div className="mx-auto mb-14 max-w-7xl px-5 text-center">
-
-      <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-royal sm:text-xs">
-        <Star size={13} fill="currentColor" />
-        Customer Testimonials
-      </span>
-
-      <h2 className="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-        Trusted by Drivers.
-        <span className="block text-royal">
-          Loved by Customers.
-        </span>
-      </h2>
-
-      <p className="mx-auto mt-4 max-w-xl text-xs leading-7 text-slate-500 sm:text-sm sm:leading-8">
-        Don't just take our word for it. Discover what our
-        customers say about their experience with Ritz Auto Care.
-      </p>
-
-      {/* GOOGLE RATING */}
-
-      <div className="mt-7 inline-flex flex-wrap items-center justify-center gap-3 rounded-full border border-slate-200 bg-white px-5 py-3 shadow-sm sm:px-6">
-
-        <div className="flex gap-1 text-amber-400">
-          {[0, 1, 2, 3, 4].map((s) => (
-            <Star key={s} size={16} fill="currentColor" />
-          ))}
-        </div>
-
-        <span className="text-sm font-extrabold text-slate-900">
-          4.5/5
-        </span>
-
-        <span className="h-4 w-px bg-slate-200" />
-
-        <span className="text-xs font-medium text-slate-500 sm:text-sm">
-          Based on 121 Google reviews
-        </span>
-
-      </div>
-
-    </div>
-
-
-    {/* FIRST ROW - LEFT TO RIGHT */}
-
-    <div className="review-marquee-wrapper">
-
-      <div className="review-track review-left">
-
-        {[0, 1].map((group) => (
-          <div
-            key={group}
-            className="flex shrink-0 gap-5 pr-5"
-          >
-
-            {reviews.map((review) => (
-
-              <article
-                key={`${group}-${review.n}`}
-                className="group flex w-[290px] shrink-0 flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/60 sm:w-[350px] sm:p-6"
-              >
-
-                {/* CARD TOP */}
-
-                <div className="flex items-center justify-between">
-
-                  <div className="flex gap-1 text-amber-400">
-                    {[0, 1, 2, 3, 4].map((s) => (
-                      <Star key={s} size={14} fill="currentColor" />
-                    ))}
-                  </div>
-
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-400">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    Google Review
-                  </span>
+                  />
 
                 </div>
 
-                {/* REVIEW TEXT */}
+                {/* Bottom hover accent */}
+                <div className="absolute bottom-0 left-1/2 h-1 w-0 -translate-x-1/2 rounded-full bg-royal transition-all duration-300 group-hover:w-1/2" />
 
-                <blockquote className="mt-5 min-h-[90px] text-xs leading-7 text-slate-600 sm:text-sm">
-                  "{review.x}"
-                </blockquote>
-
-                {/* CUSTOMER DETAILS */}
-
-                <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
-
-                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-blue-100 bg-blue-50 text-sm font-extrabold text-royal">
-                    {review.n.charAt(0).toUpperCase()}
-                  </div>
-
-                  <div className="min-w-0">
-
-                    <h3 className="truncate text-sm font-bold text-slate-900">
-                      {review.n}
-                    </h3>
-
-                    <p className="mt-1 text-[10px] text-slate-400">
-                      Customer Review
-                    </p>
-
-                  </div>
-
-                  <div className="ml-auto text-royal/70">
-                    <MessageCircle size={19} />
-                  </div>
-
-                </div>
-
-              </article>
+              </motion.div>
 
             ))}
 
           </div>
-        ))}
 
-      </div>
+          {/* Bottom CTA */}
+          <div className="mt-14 text-center">
 
-    </div>
+            <p className="mb-5 text-sm text-slate-500">
+              Your vehicle deserves professional attention.
+            </p>
 
-
-    {/* SECOND ROW - RIGHT TO LEFT */}
-
-    <div className="review-marquee-wrapper mt-5">
-
-      <div className="review-track review-right">
-
-        {[0, 1].map((group) => (
-          <div
-            key={group}
-            className="flex shrink-0 gap-5 pr-5"
-          >
-
-            {[...reviews].reverse().map((review) => (
-
-              <article
-                key={`${group}-${review.n}`}
-                className="group flex w-[290px] shrink-0 flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/60 sm:w-[350px] sm:p-6"
-              >
-
-                {/* CARD TOP */}
-
-                <div className="flex items-center justify-between">
-
-                  <div className="flex gap-1 text-amber-400">
-                    {[0, 1, 2, 3, 4].map((s) => (
-                      <Star key={s} size={14} fill="currentColor" />
-                    ))}
-                  </div>
-
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-400">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    Google Review
-                  </span>
-
-                </div>
-
-                {/* REVIEW TEXT */}
-
-                <blockquote className="mt-5 min-h-[90px] text-xs leading-7 text-slate-600 sm:text-sm">
-                  "{review.x}"
-                </blockquote>
-
-                {/* CUSTOMER DETAILS */}
-
-                <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
-
-                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-blue-100 bg-blue-50 text-sm font-extrabold text-royal">
-                    {review.n.charAt(0).toUpperCase()}
-                  </div>
-
-                  <div className="min-w-0">
-
-                    <h3 className="truncate text-sm font-bold text-slate-900">
-                      {review.n}
-                    </h3>
-
-                    <p className="mt-1 text-[10px] text-slate-400">
-                      Customer Review
-                    </p>
-
-                  </div>
-
-                  <div className="ml-auto text-royal/70">
-                    <MessageCircle size={19} />
-                  </div>
-
-                </div>
-
-              </article>
-
-            ))}
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 rounded-lg bg-royal px-8 py-4 text-sm font-bold text-white shadow-lg shadow-royal/20 transition-all hover:-translate-y-1 hover:bg-[#101828]"
+            >
+              Book Your Service
+              <ArrowUpRight size={18} />
+            </a>
 
           </div>
-        ))}
 
-      </div>
-
-    </div>
-
-
-    {/* BOTTOM CTA */}
-
-    <div className="mt-14 px-5 text-center sm:mt-16">
-
-      <p className="mb-5 text-xs font-medium text-slate-500 sm:text-sm">
-        Experience the Ritz Auto Care difference.
-      </p>
-
-      <a
-        href="#contact"
-        className="group inline-flex items-center gap-2 rounded-full bg-royal px-7 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-900/15 transition-all duration-300 hover:-translate-y-1 hover:bg-[#174DAA] sm:text-sm"
-      >
-        Book Your Service
-
-        <ArrowUpRight
-          size={16}
-          className="transition-transform group-hover:translate-x-1"
-        />
-      </a>
-
-    </div>
-
-  </div>
-</section>
-
-
-
-      {/* CTA */}
-      <section id="contact" className="relative overflow-hidden bg-royal py-20 text-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-8 px-4">
-          <h2 className="max-w-xl text-4xl font-extrabold leading-tight">Ready for dealer-level service without the dealer price?</h2>
-          <div className="flex flex-wrap gap-4">
-            <a href={WA} className="inline-flex items-center gap-2 rounded-md bg-white px-7 py-4 font-bold text-royal transition hover:bg-ink hover:text-white"><MessageCircle size={18} /> WhatsApp us</a>
-            <a href={`tel:${PHONE}`} className="inline-flex items-center gap-2 rounded-md border border-white/40 px-7 py-4 font-bold transition hover:bg-white/10"><Phone size={18} /> {PHONE}</a>
-          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-ink text-steel">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 md:grid-cols-4">
-          <div><Image src="/logo.png" alt="Ritz Auto Care LLC" width={170} height={48} className="h-11 w-auto" /><p className="mt-4 text-sm">Dealer standard auto service in Dubai &amp; Abu Dhabi.</p></div>
-          <div><h3 className="mb-4 font-bold text-white">Services</h3><ul className="space-y-2 text-sm">{["Car Battery Change", "Jump Start", "Flat Tyre Change", "Fuel Delivery", "Car Oil Change", "Car AC Repair"].map((s) => <li key={s}><a href="#services" className="hover:text-white">{s}</a></li>)}</ul></div>
-         <div>
-  <h3 className="mb-4 font-bold text-white">Brands</h3>
 
-  <ul className="space-y-2 text-sm">
-    {brands.slice(0, 6).map((brand) => (
-      <li key={brand.name}>
+
+
+      {/* PREMIUM CUSTOMER REVIEWS MARQUEE */}
+
+      <section
+        id="reviews"
+        className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-24"
+      >
+        {/* BACKGROUND EFFECTS */}
+
+        <div className="pointer-events-none absolute left-1/2 top-0 h-80 w-80 -translate-x-1/2 rounded-full bg-blue-100/70 blur-[120px]" />
+
+        <div className="pointer-events-none absolute -right-40 bottom-0 h-80 w-80 rounded-full bg-slate-200/60 blur-[120px]" />
+
+        <div className="relative">
+
+          {/* SECTION HEADING */}
+
+          <div className="mx-auto mb-14 max-w-7xl px-5 text-center">
+
+            <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-royal sm:text-xs">
+              <Star size={13} fill="currentColor" />
+              Customer Testimonials
+            </span>
+
+            <h2 className="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+              Trusted by Drivers.
+              <span className="block text-royal">
+                Loved by Customers.
+              </span>
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-xl text-xs leading-7 text-slate-500 sm:text-sm sm:leading-8">
+              Don't just take our word for it. Discover what our
+              customers say about their experience with Ritz Auto Care.
+            </p>
+
+            {/* GOOGLE RATING */}
+
+            <div className="mt-7 inline-flex flex-wrap items-center justify-center gap-3 rounded-full border border-slate-200 bg-white px-5 py-3 shadow-sm sm:px-6">
+
+              <div className="flex gap-1 text-amber-400">
+                {[0, 1, 2, 3, 4].map((s) => (
+                  <Star key={s} size={16} fill="currentColor" />
+                ))}
+              </div>
+
+              <span className="text-sm font-extrabold text-slate-900">
+                4.5/5
+              </span>
+
+              <span className="h-4 w-px bg-slate-200" />
+
+              <span className="text-xs font-medium text-slate-500 sm:text-sm">
+                Based on 121 Google reviews
+              </span>
+
+            </div>
+
+          </div>
+
+
+          {/* FIRST ROW - LEFT TO RIGHT */}
+
+          <div className="review-marquee-wrapper">
+
+            <div className="review-track review-left">
+
+              {[0, 1].map((group) => (
+                <div
+                  key={group}
+                  className="flex shrink-0 gap-5 pr-5"
+                >
+
+                  {reviews.map((review) => (
+
+                    <article
+                      key={`${group}-${review.n}`}
+                      className="group flex w-[290px] shrink-0 flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/60 sm:w-[350px] sm:p-6"
+                    >
+
+                      {/* CARD TOP */}
+
+                      <div className="flex items-center justify-between">
+
+                        <div className="flex gap-1 text-amber-400">
+                          {[0, 1, 2, 3, 4].map((s) => (
+                            <Star key={s} size={14} fill="currentColor" />
+                          ))}
+                        </div>
+
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-400">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          Google Review
+                        </span>
+
+                      </div>
+
+                      {/* REVIEW TEXT */}
+
+                      <blockquote className="mt-5 min-h-[90px] text-xs leading-7 text-slate-600 sm:text-sm">
+                        "{review.x}"
+                      </blockquote>
+
+                      {/* CUSTOMER DETAILS */}
+
+                      <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
+
+                        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-blue-100 bg-blue-50 text-sm font-extrabold text-royal">
+                          {review.n.charAt(0).toUpperCase()}
+                        </div>
+
+                        <div className="min-w-0">
+
+                          <h3 className="truncate text-sm font-bold text-slate-900">
+                            {review.n}
+                          </h3>
+
+                          <p className="mt-1 text-[10px] text-slate-400">
+                            Customer Review
+                          </p>
+
+                        </div>
+
+                        <div className="ml-auto text-royal/70">
+                          <MessageCircle size={19} />
+                        </div>
+
+                      </div>
+
+                    </article>
+
+                  ))}
+
+                </div>
+              ))}
+
+            </div>
+
+          </div>
+
+
+          {/* SECOND ROW - RIGHT TO LEFT */}
+
+          <div className="review-marquee-wrapper mt-5">
+
+            <div className="review-track review-right">
+
+              {[0, 1].map((group) => (
+                <div
+                  key={group}
+                  className="flex shrink-0 gap-5 pr-5"
+                >
+
+                  {[...reviews].reverse().map((review) => (
+
+                    <article
+                      key={`${group}-${review.n}`}
+                      className="group flex w-[290px] shrink-0 flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/60 sm:w-[350px] sm:p-6"
+                    >
+
+                      {/* CARD TOP */}
+
+                      <div className="flex items-center justify-between">
+
+                        <div className="flex gap-1 text-amber-400">
+                          {[0, 1, 2, 3, 4].map((s) => (
+                            <Star key={s} size={14} fill="currentColor" />
+                          ))}
+                        </div>
+
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-400">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          Google Review
+                        </span>
+
+                      </div>
+
+                      {/* REVIEW TEXT */}
+
+                      <blockquote className="mt-5 min-h-[90px] text-xs leading-7 text-slate-600 sm:text-sm">
+                        "{review.x}"
+                      </blockquote>
+
+                      {/* CUSTOMER DETAILS */}
+
+                      <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
+
+                        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-blue-100 bg-blue-50 text-sm font-extrabold text-royal">
+                          {review.n.charAt(0).toUpperCase()}
+                        </div>
+
+                        <div className="min-w-0">
+
+                          <h3 className="truncate text-sm font-bold text-slate-900">
+                            {review.n}
+                          </h3>
+
+                          <p className="mt-1 text-[10px] text-slate-400">
+                            Customer Review
+                          </p>
+
+                        </div>
+
+                        <div className="ml-auto text-royal/70">
+                          <MessageCircle size={19} />
+                        </div>
+
+                      </div>
+
+                    </article>
+
+                  ))}
+
+                </div>
+              ))}
+
+            </div>
+
+          </div>
+
+
+          {/* BOTTOM CTA */}
+
+          <div className="mt-14 px-5 text-center sm:mt-16">
+
+            <p className="mb-5 text-xs font-medium text-slate-500 sm:text-sm">
+              Experience the Ritz Auto Care difference.
+            </p>
+
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-2 rounded-full bg-royal px-7 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-900/15 transition-all duration-300 hover:-translate-y-1 hover:bg-[#174DAA] sm:text-sm"
+            >
+              Book Your Service
+
+              <ArrowUpRight
+                size={16}
+                className="transition-transform group-hover:translate-x-1"
+              />
+            </a>
+
+          </div>
+
+        </div>
+      </section>
+
+
+
+ 
+{/* PREMIUM CONTACT CTA */}
+
+<section
+  id="contact"
+  className="relative isolate overflow-hidden bg-royal py-12 text-white sm:py-16 md:py-20 lg:py-24"
+>
+  {/* BACKGROUND DECORATIONS */}
+  <div className="pointer-events-none absolute -right-32 -top-40 h-[420px] w-[420px] rounded-full border border-white/10" />
+  <div className="pointer-events-none absolute -right-20 -top-28 h-[320px] w-[320px] rounded-full border border-white/10" />
+  <div className="pointer-events-none absolute -bottom-40 -left-32 h-[400px] w-[400px] rounded-full bg-white/10 blur-[100px]" />
+
+  {/* CONTENT */}
+  <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7 }}
+      className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[1fr_auto] lg:gap-14"
+    >
+
+      {/* LEFT CONTENT */}
+      <div className="max-w-2xl">
+
+        {/* BADGE */}
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-white/90 backdrop-blur-md sm:px-4 sm:text-[10px] sm:tracking-[0.2em] lg:text-xs">
+          <Sparkles size={14} />
+          Your Car Deserves The Best
+        </span>
+
+        {/* HEADING */}
+        <h2 className="mt-5 text-2xl font-black leading-[1.2] tracking-tight sm:mt-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+          Ready for Dealer-Level Service
+          <span className="mt-1.5 block text-white/75 sm:mt-2">
+            Without the Dealer Price?
+          </span>
+        </h2>
+
+        {/* DESCRIPTION */}
+        <p className="mt-4 max-w-xl text-xs leading-6 text-white/75 sm:mt-5 sm:text-sm sm:leading-7 lg:text-base lg:leading-8">
+          Experience professional automotive care with expert
+          technicians, quality workmanship and reliable service.
+          Get in touch with Ritz Auto Care today.
+        </p>
+
+        {/* LOCATION */}
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-[11px] font-medium text-white/80 sm:mt-6 sm:gap-x-6 sm:text-xs lg:text-sm">
+          <span className="inline-flex items-center gap-2">
+            <MapPin size={15} className="shrink-0 sm:h-[17px] sm:w-[17px]" />
+            Dubai &amp; Abu Dhabi
+          </span>
+
+          <span className="inline-flex items-center gap-2">
+            <ShieldCheck size={15} className="shrink-0 sm:h-[17px] sm:w-[17px]" />
+            Professional Vehicle Care
+          </span>
+        </div>
+
+      </div>
+
+      {/* RIGHT ACTION CARD */}
+      <div className="w-full rounded-2xl border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-xl sm:p-6 md:p-7 lg:w-[340px]">
+
+        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/65 sm:text-xs sm:tracking-[0.18em]">
+          Let's Get Started
+        </p>
+
+        <h3 className="mt-2 text-xl font-extrabold text-white sm:mt-3 sm:text-2xl">
+          Book Your Service
+        </h3>
+
+        <p className="mt-2 text-xs leading-5 text-white/70 sm:text-sm sm:leading-6">
+          Speak with our team and get assistance for your vehicle.
+        </p>
+
+        {/* WHATSAPP BUTTON */}
+        <a
+          href={WA}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3.5 text-xs font-extrabold text-royal shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#101828] hover:text-white sm:mt-7 sm:gap-3 sm:px-6 sm:py-4 sm:text-sm"
+        >
+          <MessageCircle size={18} className="shrink-0 sm:h-5 sm:w-5" />
+          WhatsApp Us
+          <ArrowUpRight
+            size={16}
+            className="shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 sm:h-[17px] sm:w-[17px]"
+          />
+        </a>
+
+        {/* CALL BUTTON */}
+        <a
+          href={`tel:${PHONE}`}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/5 px-4 py-3.5 text-xs font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 sm:gap-3 sm:px-6 sm:py-4 sm:text-sm"
+        >
+          <Phone size={17} className="shrink-0 sm:h-[19px] sm:w-[19px]" />
+          Call {PHONE}
+        </a>
+
+        {/* FOOTNOTE */}
+        <div className="mt-4 flex items-center justify-center gap-2 border-t border-white/15 pt-4 text-center text-[10px] leading-5 text-white/65 sm:mt-5 sm:pt-5 sm:text-[11px]">
+          <ShieldCheck size={14} className="shrink-0 sm:h-[15px] sm:w-[15px]" />
+          We're here to help with your vehicle care needs.
+        </div>
+
+      </div>
+
+    </motion.div>
+
+  </div>
+</section>
+
+
+
+      {/* Footer */}
+
+
+<footer className="relative overflow-hidden bg-ink text-steel">
+  {/* Decorative Background */}
+  <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-royal/10 blur-3xl" />
+  <div className="pointer-events-none absolute -bottom-40 -left-32 h-80 w-80 rounded-full bg-bright/10 blur-3xl" />
+
+  <div className="relative mx-auto max-w-7xl px-4 pb-8 pt-12 sm:px-6 sm:pb-10 sm:pt-16 lg:px-8 lg:pt-20">
+
+    {/* Main Footer Grid */}
+    <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-8 sm:gap-y-12 lg:grid-cols-12 lg:gap-8">
+
+      {/* BRAND SECTION */}
+      <div className="col-span-2 lg:col-span-4">
+        <a
+          href="#home"
+          aria-label="Ritz Auto Care homepage"
+          className="inline-flex"
+        >
+          <Image
+            src="/logo.png"
+            alt="Ritz Auto Care LLC"
+            width={190}
+            height={55}
+            className="h-10 w-auto object-contain sm:h-12"
+          />
+        </a>
+
+        <p className="mt-4 max-w-sm text-xs leading-6 text-steel/80 sm:mt-5 sm:text-sm sm:leading-7">
+          Experience dealer-standard automotive care with professional
+          service, reliable solutions and quality workmanship in Dubai
+          and Abu Dhabi.
+        </p>
+
+        {/* Action Buttons */}
+        <div className="mt-5 flex flex-wrap gap-2.5 sm:mt-6 sm:gap-3">
+          <a
+            href={WA}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Chat with Ritz Auto Care on WhatsApp"
+            className="inline-flex items-center gap-2 rounded-full bg-royal px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-bright hover:text-ink sm:px-5 sm:py-3 sm:text-sm"
+          >
+            <MessageCircle size={16} />
+            WhatsApp Us
+            <ArrowUpRight size={14} />
+          </a>
+
+          <a
+            href={`tel:${PHONE}`}
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-xs font-semibold text-white transition hover:border-bright hover:text-bright sm:px-5 sm:py-3 sm:text-sm"
+          >
+            <Phone size={15} />
+            Call Now
+          </a>
+        </div>
+      </div>
+
+      {/* SERVICES */}
+      <div className="col-span-1 min-w-0 lg:col-span-2">
+        <h3 className="mb-4 text-sm font-bold text-white sm:mb-6 sm:text-base">
+          Our Services
+          <span className="mt-2 block h-0.5 w-8 rounded-full bg-bright" />
+        </h3>
+
+        <ul className="space-y-3 text-[11px] sm:space-y-3.5 sm:text-sm">
+          {[
+            "Car Battery Change",
+            "Jump Start",
+            "Flat Tyre Change",
+            "Fuel Delivery",
+            "Car Oil Change",
+            "Car AC Repair",
+          ].map((service) => (
+            <li key={service}>
+              <a
+                href="#services"
+                className="group inline-flex items-start gap-1.5 transition-colors hover:text-white sm:gap-2"
+              >
+                <ArrowRight
+                  size={12}
+                  className="mt-0.5 shrink-0 text-bright transition-transform group-hover:translate-x-1 sm:h-[13px] sm:w-[13px]"
+                />
+                <span>{service}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* BRANDS */}
+      <div className="col-span-1 min-w-0 lg:col-span-2">
+        <h3 className="mb-4 text-sm font-bold text-white sm:mb-6 sm:text-base">
+          Brands We Serve
+          <span className="mt-2 block h-0.5 w-8 rounded-full bg-bright" />
+        </h3>
+
+        <ul className="space-y-3 text-[11px] sm:space-y-3.5 sm:text-sm">
+          {brands.slice(0, 6).map((brand) => (
+            <li key={brand.logo}>
+              <a
+                href="#brands"
+                className="group inline-flex items-start gap-1.5 transition-colors hover:text-white sm:gap-2"
+              >
+                <ArrowRight
+                  size={12}
+                  className="mt-0.5 shrink-0 text-bright transition-transform group-hover:translate-x-1 sm:h-[13px] sm:w-[13px]"
+                />
+                <span>{brand.name}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
         <a
           href="#brands"
-          className="transition-colors hover:text-white"
+          className="mt-4 inline-flex items-center gap-1 text-[10px] font-bold text-bright transition hover:text-white sm:mt-5 sm:gap-2 sm:text-xs"
         >
-          {brand.name}
+          Explore all brands
+          <ArrowUpRight size={13} />
         </a>
-      </li>
-    ))}
-  </ul>
-</div>
-          <div><h3 className="mb-4 font-bold text-white">Contact</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex gap-2"><Phone size={16} className="mt-0.5 shrink-0 text-bright" /> +971 567807979</li>
-              <li className="flex gap-2"><Mail size={16} className="mt-0.5 shrink-0 text-bright" /> info@ritzautocare.ae</li>
-              <li className="flex gap-2"><MapPin size={16} className="mt-0.5 shrink-0 text-bright" /> DIP 1, Warehouse 35, Street 59, near AIKO Mall, Dubai Investment Park First, Dubai</li>
-            </ul>
-          </div>
+      </div>
+
+      {/* CONTACT */}
+      <div className="col-span-2 lg:col-span-4">
+        <h3 className="mb-5 text-sm font-bold text-white sm:mb-6 sm:text-base">
+          Get In Touch
+          <span className="mt-2 block h-0.5 w-8 rounded-full bg-bright" />
+        </h3>
+
+        <ul className="space-y-4 text-xs sm:space-y-5 sm:text-sm">
+
+          {/* Phone */}
+          <li className="flex items-start gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-bright sm:h-10 sm:w-10">
+              <Phone size={16} />
+            </span>
+
+            <div className="min-w-0">
+              <p className="mb-1 text-[10px] text-steel/60 sm:text-xs">
+                Phone / WhatsApp
+              </p>
+
+              <a
+                href={`tel:${PHONE}`}
+                className="font-semibold text-white transition hover:text-bright"
+              >
+                +971 56 780 7979
+              </a>
+            </div>
+          </li>
+
+          {/* Email */}
+          <li className="flex items-start gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-bright sm:h-10 sm:w-10">
+              <Mail size={16} />
+            </span>
+
+            <div className="min-w-0">
+              <p className="mb-1 text-[10px] text-steel/60 sm:text-xs">
+                Email Address
+              </p>
+
+              <a
+                href="mailto:info@ritzautocare.ae"
+                className="break-all font-semibold text-white transition hover:text-bright"
+              >
+                info@ritzautocare.ae
+              </a>
+            </div>
+          </li>
+
+          {/* Address */}
+          <li className="flex items-start gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-bright sm:h-10 sm:w-10">
+              <MapPin size={16} />
+            </span>
+
+            <div className="min-w-0">
+              <p className="mb-1 text-[10px] text-steel/60 sm:text-xs">
+                Our Location
+              </p>
+
+              <p className="leading-6 text-steel/90">
+                DIP 1, Warehouse 35, Street 59, near AIKO Mall,
+                Dubai Investment Park First, Dubai.
+              </p>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+
+    {/* BOTTOM FOOTER */}
+    <div className="mt-10 border-t border-white/10 pt-6 sm:mt-14 sm:pt-7">
+      <div className="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:gap-4 sm:text-left">
+
+        <p className="text-[10px] leading-5 text-steel/60 sm:text-xs">
+          © {new Date().getFullYear()} Ritz Auto Care LLC. All rights reserved.
+        </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] text-steel/60 sm:gap-x-6 sm:text-xs">
+          <a
+            href="/privacy-policy"
+            className="transition hover:text-white"
+          >
+            Privacy Policy
+          </a>
+
+          <a
+            href="/terms-and-conditions"
+            className="transition hover:text-white"
+          >
+            Terms &amp; Conditions
+          </a>
+
+          <a
+            href="#home"
+            className="inline-flex items-center gap-1 font-semibold text-bright transition hover:text-white"
+          >
+            Back to Top
+            <ArrowUpRight size={13} />
+          </a>
         </div>
-        <p className="border-t border-white/10 py-5 text-center text-sm">© 2026 Ritz Auto Care LLC. All rights reserved.</p>
-      </footer>
+
+      </div>
+    </div>
+
+  </div>
+</footer>
+
 
       {/* Floating call button */}
       <a href={`tel:${PHONE}`} aria-label="Call advisor" className="fixed bottom-5 right-5 z-50 flex items-center gap-3">
