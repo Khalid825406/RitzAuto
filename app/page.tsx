@@ -1266,84 +1266,87 @@ export default function Home() {
       </span>
     </div>
 
-    {/* ROAD SERVICE CARDS */}
-    <motion.div
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ staggerChildren: 0.1 }}
-      className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
-    >
-      {road.map(({ i: Icon, t, d }, index) => {
+   
+{/* ROAD SERVICE CARDS */}
+<motion.div
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, margin: "-60px" }}
+  transition={{ staggerChildren: 0.1 }}
+  className="grid items-start gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4"
+>
+  {road.map(({ i: Icon, t, d }, index) => {
 
-        const roadsideImages = [
-          "/battery-jumpstart.jpeg",
-          "/jump-start.jpeg",
-          "/flat-tyre.jpeg",
-          "/fuel-delivery.jpeg",
-        ];
+    const roadsideImages = [
+      "/battery-jumpstart.jpeg",
+      "/jump-start.jpeg",
+      "/flat-tyre.jpeg",
+      "/fuel-delivery.jpeg",
+    ];
 
-        return (
-          <motion.div
-            key={t}
-            variants={up}
-            whileHover={{ y: -6 }}
-            className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:border-blue-200 hover:shadow-xl hover:shadow-slate-200/60"
+    return (
+      <motion.div
+        key={t}
+        variants={up}
+        whileHover={{ y: -5 }}
+        className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-300 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/60 sm:p-4"
+      >
+
+        {/* SERVICE IMAGE */}
+        <div className="relative -mx-4 -mt-4 mb-4 h-36 overflow-hidden rounded-t-xl bg-slate-100 sm:h-40 lg:h-36 xl:h-40">
+
+          <Image
+            src={roadsideImages[index]}
+            alt={`${t} roadside assistance`}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+
+          {/* IMAGE LABEL */}
+          <span className="absolute bottom-2.5 left-2.5 rounded-md bg-white/95 px-2.5 py-1 text-[9px] font-bold text-slate-800 shadow sm:text-[10px]">
+            {t}
+          </span>
+
+          {/* NUMBER */}
+          <span className="absolute right-2.5 top-2.5 grid h-7 w-7 place-items-center rounded-full bg-white/95 text-[10px] font-black text-royal shadow sm:h-8 sm:w-8 sm:text-xs">
+            0{index + 1}
+          </span>
+        </div>
+
+        {/* CARD ICON */}
+        <div className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white sm:h-11 sm:w-11">
+          <Icon size={21} strokeWidth={1.7} />
+        </div>
+
+        {/* CARD CONTENT */}
+        <div className="mt-3">
+
+          <h3 className="text-sm font-extrabold leading-6 text-slate-900 sm:text-base">
+            {t}
+          </h3>
+
+          <p className="mt-1.5 text-xs leading-5 text-slate-500 sm:text-[13px] sm:leading-6">
+            {d}
+          </p>
+
+          {/* REQUEST ASSISTANCE */}
+          <a
+            href={`tel:${PHONE}`}
+            className="mt-4 inline-flex items-center gap-2 border-t border-slate-100 pt-3 text-[11px] font-bold text-royal transition-colors hover:text-slate-900 sm:text-xs"
           >
+            Request Assistance
+            <ArrowUpRight size={15} />
+          </a>
 
-            {/* SERVICE IMAGE */}
-            <div className="relative -mx-6 -mt-6 mb-6 h-44 overflow-hidden bg-slate-100">
+        </div>
+      </motion.div>
+    );
+  })}
+</motion.div>
 
-              <Image
-                src={roadsideImages[index]}
-                alt={`${t} roadside assistance`}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-
-              {/* IMAGE LABEL */}
-              <span className="absolute bottom-3 left-3 rounded-md bg-white/95 px-3 py-1.5 text-[10px] font-bold text-slate-800 shadow">
-                {t}
-              </span>
-
-              {/* NUMBER */}
-              <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/95 text-xs font-black text-royal shadow">
-                0{index + 1}
-              </span>
-            </div>
-
-            {/* CARD ICON */}
-            <div className="relative grid h-12 w-12 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white">
-              <Icon size={24} strokeWidth={1.7} />
-            </div>
-
-            {/* CARD CONTENT */}
-            <div className="relative mt-5">
-
-              <h3 className="text-base font-extrabold text-slate-900 sm:text-lg">
-                {t}
-              </h3>
-
-              <p className="mt-3 min-h-[84px] text-xs leading-6 text-slate-500 sm:text-sm sm:leading-7">
-                {d}
-              </p>
-
-              <a
-                href={`tel:${PHONE}`}
-                className="mt-5 inline-flex items-center gap-2 border-t border-slate-100 pt-4 text-xs font-bold text-royal transition-colors hover:text-slate-900 sm:text-sm"
-              >
-                Request Assistance
-                <ArrowUpRight size={16} />
-              </a>
-
-            </div>
-          </motion.div>
-        );
-      })}
-    </motion.div>
 
   </div>
 </section>
