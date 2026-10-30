@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import {
   Phone, Mail, MapPin, Wrench, Truck, ShieldCheck, Car, Settings, Armchair, SprayCan,
-  ScanSearch, Award, Gauge, HeartHandshake, CalendarCheck, KeyRound, ClipboardCheck, ThumbsUp,
+  ScanSearch, Award,Gauge as GaugeIcon, HeartHandshake, CalendarCheck, KeyRound, ClipboardCheck, ThumbsUp,
   BatteryCharging, Zap, CircleDot, Fuel, Star, Check, ArrowRight, MessageCircle,
   ArrowUpRight,
   Sparkles,
