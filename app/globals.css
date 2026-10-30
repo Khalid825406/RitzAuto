@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #060b16;
+  --color-navy: #0a1426;
+  --color-royal: #1a5fb4;
+  --color-bright: #2b82e6;
+  --color-steel: #c8d0dc;
+  --color-mist: #eef3fa;
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-body: var(--font-figtree), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: #0a1426;
+  background: #fff;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+}
+
+.chrome-text {
+  background: linear-gradient(180deg, #fff 0%, #c8d0dc 55%, #8d99ab 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid #2b82e6;
+  outline-offset: 3px;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  animation: marquee 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
+}
+
+.brand-marquee {
+  animation: brand-scroll 35s linear infinite;
+  will-change: transform;
+}
+
+.brand-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes brand-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-marquee {
+    animation: none;
+  }
+}
+
+
+/* Reviews Dual Marquee */
+
+.review-marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.review-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.review-left {
+  animation: review-left-scroll 35s linear infinite;
+}
+
+.review-right {
+  animation: review-right-scroll 35s linear infinite;
+}
+
+.review-marquee-wrapper:hover .review-track {
+  animation-play-state: paused;
+}
+
+@keyframes review-left-scroll {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes review-right-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .review-left,
+  .review-right {
+    animation-duration: 28s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-track {
+    animation: none;
+  }
+}
