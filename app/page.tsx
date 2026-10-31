@@ -10,7 +10,7 @@ import {
   ArrowUpRight,
   Sparkles,
   Droplets,
-  ChevronLeft, ChevronRight,
+   Menu, X 
 
 } from "lucide-react";
 
@@ -306,31 +306,148 @@ function BeforeAfterSection() {
 
 export default function Home() {
 
- 
+const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* Top bar */}
-      <div className="bg-royal text-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 py-2 text-sm">
-          <span>Free pick-up &amp; drop-off, car wash &amp; 360° inspection</span>
-          <a href={WA} className="inline-flex items-center gap-1.5 rounded-full bg-green-500 px-3 py-1 font-semibold"><MessageCircle size={14} /> +971 567807979</a>
-          <a href={`tel:${PHONE}`} className="inline-flex items-center gap-1.5 rounded-full bg-red-600 px-3 py-1 font-semibold"><Phone size={14} /> Toll-Free: {PHONE}</a>
-        </div>
-      </div>
+  
+{/* TOP BAR */}
+<div className="border-b border-white/10 bg-[#071525] text-white">
+  <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-5 gap-y-2 px-4 py-2.5 text-xs sm:text-sm">
 
-      {/* Nav */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <a href="#"><Image src="/logo.png" alt="Ritz Auto Care LLC" width={170} height={48} priority className="h-11 w-auto" /></a>
-          <nav className="hidden gap-7 text-sm font-semibold text-steel lg:flex">
-            {["Services", "Roadside", "Brands", "How it works", "Reviews", "Contact"].map((l) => (
-              <a key={l} href={`#${l.toLowerCase().replace(/ /g, "-")}`} className="transition hover:text-white">{l}</a>
-            ))}
-          </nav>
-          <a href="#contact" className="rounded-md bg-bright px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-royal/40 transition hover:bg-white hover:text-royal">Get a free quote</a>
-        </div>
-      </header>
+    <span className="flex items-center gap-2 text-slate-200">
+      <span className="h-2 w-2 rounded-full bg-[#2196F3] shadow-[0_0_10px_#2196F3]" />
+      Free Pick-up & Drop-off, Car Wash & 360° Inspection
+    </span>
+
+    <a
+      href={WA}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1.5 rounded-full border border-green-400/30 bg-green-500/10 px-3 py-1.5 font-semibold text-green-400 transition hover:bg-green-500 hover:text-white"
+    >
+      <MessageCircle size={14} />
+      +971 567807979
+    </a>
+
+    <a
+      href={`tel:${PHONE}`}
+      className="inline-flex items-center gap-1.5 rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1.5 font-semibold text-blue-300 transition hover:bg-blue-600 hover:text-white"
+    >
+      <Phone size={14} />
+      Toll-Free: {PHONE}
+    </a>
+  </div>
+</div>
+
+{/* MAIN NAVBAR */}
+<header className="sticky top-0 z-50 border-b border-white/10 bg-[#080D14]/95 shadow-xl shadow-black/20 backdrop-blur-xl">
+  <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+
+    {/* LOGO */}
+    <a
+      href="#"
+      onClick={() => setMobileMenuOpen(false)}
+      className="flex shrink-0 items-center"
+    >
+      <Image
+        src="/logo.png"
+        alt="Ritz Auto Care LLC"
+        width={176}
+        height={56}
+        priority
+        className="h-12 w-auto object-contain sm:h-14"
+      />
+    </a>
+
+    {/* DESKTOP NAVIGATION */}
+    <nav className="hidden items-center gap-6 lg:flex">
+      {[
+        "Services",
+        "Roadside",
+        "Brands",
+        "How it works",
+        "Reviews",
+        "Contact",
+      ].map((item) => (
+        <a
+          key={item}
+          href={`#${item.toLowerCase().replace(/ /g, "-")}`}
+          className="group relative py-3 text-sm font-semibold text-slate-300 transition duration-300 hover:text-white"
+        >
+          {item}
+
+          <span className="absolute bottom-1 left-0 h-[2px] w-0 rounded-full bg-[#2196F3] transition-all duration-300 group-hover:w-full" />
+        </a>
+      ))}
+    </nav>
+
+    {/* DESKTOP CTA */}
+    <a
+      href="#contact"
+      className="hidden items-center gap-2 rounded-md bg-gradient-to-r from-[#1677D2] to-[#2196F3] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/20 transition duration-300 hover:-translate-y-0.5 hover:shadow-blue-500/40 lg:inline-flex"
+    >
+      Get a Free Quote
+      <ArrowUpRight size={17} />
+    </a>
+
+    {/* MOBILE MENU BUTTON */}
+    <button
+      type="button"
+      onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+      aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+      aria-expanded={mobileMenuOpen}
+      className="flex h-10 w-10 items-center justify-center rounded-md border border-white/15 bg-white/5 text-white transition hover:border-blue-400 hover:text-blue-400 lg:hidden"
+    >
+      {mobileMenuOpen ? <X size={23} /> : <Menu size={23} />}
+    </button>
+  </div>
+
+  {/* MOBILE NAVIGATION */}
+  <AnimatePresence>
+    {mobileMenuOpen && (
+      <motion.div
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: "auto", opacity: 1 }}
+        exit={{ height: 0, opacity: 0 }}
+        transition={{ duration: 0.25 }}
+        className="overflow-hidden border-t border-white/10 bg-[#080D14] lg:hidden"
+      >
+        <nav className="mx-auto flex max-w-7xl flex-col px-5 py-4">
+
+          {[
+            "Services",
+            "Roadside",
+            "Brands",
+            "How it works",
+            "Reviews",
+            "Contact",
+          ].map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase().replace(/ /g, "-")}`}
+              onClick={() => setMobileMenuOpen(false)}
+              className="border-b border-white/5 py-3 text-sm font-semibold text-slate-300 transition hover:pl-2 hover:text-[#2196F3]"
+            >
+              {item}
+            </a>
+          ))}
+
+          <a
+            href="#contact"
+            onClick={() => setMobileMenuOpen(false)}
+            className="mt-4 flex items-center justify-center gap-2 rounded-md bg-[#1677D2] px-5 py-3 font-bold text-white transition hover:bg-[#2196F3]"
+          >
+            Get a Free Quote
+            <ArrowUpRight size={17} />
+          </a>
+
+        </nav>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</header>
+
 
 
 
@@ -342,127 +459,127 @@ export default function Home() {
       {/* COMPACT PREMIUM HERO CAROUSEL */}
 
 
-<section className="relative isolate h-[560px] overflow-hidden bg-[#080B12] text-white sm:h-[600px] lg:h-[min(80vh,620px)]">
+      <section className="relative isolate h-[560px] overflow-hidden bg-[#080B12] text-white sm:h-[600px] lg:h-[min(80vh,620px)]">
 
-  {/* BACKGROUND VIDEO */}
-  <video
-    autoPlay
-    muted
-    loop
-    playsInline
-    preload="metadata"
-    poster="/hero-poster.png"
-    aria-label="Ritz Auto Care professional automotive workshop"
-    className="absolute inset-0 h-full w-full object-cover object-center"
-  >
-    <source src="/hero.mp4" type="video/mp4" />
-    Your browser does not support HTML video.
-  </video>
-
-  {/* DARK VIDEO OVERLAY */}
-  <div className="absolute inset-0 bg-gradient-to-r from-[#070B14]/95 via-[#070B14]/70 to-[#070B14]/25" />
-  <div className="absolute inset-0 bg-gradient-to-t from-[#070B14]/75 via-transparent to-[#070B14]/10" />
-
-  {/* MAIN CONTENT */}
-  <div className="relative z-10 mx-auto flex h-full max-w-[1440px] items-center px-5 pb-8 pt-10 sm:px-8 lg:px-14">
-
-    <motion.div
-      initial={{ opacity: 0, y: 25, filter: "blur(6px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.9, ease: "easeOut" }}
-      className="w-full max-w-xl"
-    >
-
-      {/* EYEBROW */}
-      <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 backdrop-blur-md">
-        <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-        <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/90 sm:text-[10px]">
-          Premium Automotive Care
-        </span>
-      </div>
-
-      {/* HEADING */}
-      <h1 className="max-w-lg text-[32px] font-extrabold leading-[1.12] tracking-tight sm:text-[42px] lg:text-[48px]">
-        Premium Car Care.
-        <span className="mt-1 block text-blue-400">
-          Without Compromise.
-        </span>
-      </h1>
-
-      {/* DESCRIPTION */}
-      <p className="mt-4 max-w-md text-[12px] leading-6 text-white/75 sm:text-[13px] sm:leading-7">
-        Professional automotive solutions for luxury and everyday
-        vehicles. Expert technicians and advanced diagnostics for
-        complete vehicle care.
-      </p>
-
-      {/* LOCATION */}
-      <div className="mt-4 flex items-center gap-2 text-[11px] font-medium text-white/75">
-        <MapPin size={14} className="text-blue-400" />
-        Dubai & Abu Dhabi, UAE
-      </div>
-
-      {/* BUTTONS */}
-      <div className="mt-6 flex flex-wrap gap-3">
-
-        <a
-          href="#contact"
-          className="group inline-flex items-center gap-2 rounded-full bg-royal px-5 py-3 text-[11px] font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#174DAA] sm:text-xs"
+        {/* BACKGROUND VIDEO */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/hero-poster.png"
+          aria-label="Ritz Auto Care professional automotive workshop"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         >
-          Book Your Service
-          <ArrowRight
-            size={14}
-            className="transition-transform group-hover:translate-x-1"
-          />
-        </a>
+          <source src="/hero.mp4" type="video/mp4" />
+          Your browser does not support HTML video.
+        </video>
 
-        <a
-          href={`tel:${PHONE}`}
-          className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-slate-900 sm:text-xs"
-        >
-          <Phone size={14} />
-          {PHONE}
-        </a>
+        {/* DARK VIDEO OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#070B14]/95 via-[#070B14]/70 to-[#070B14]/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#070B14]/75 via-transparent to-[#070B14]/10" />
 
-      </div>
+        {/* MAIN CONTENT */}
+        <div className="relative z-10 mx-auto flex h-full max-w-[1440px] items-center px-5 pb-8 pt-10 sm:px-8 lg:px-14">
 
-      {/* FREE BENEFITS */}
-      <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/20 pt-5">
+          <motion.div
+            initial={{ opacity: 0, y: 25, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+            className="w-full max-w-xl"
+          >
 
-        {[
-          "Free Pick-up & Drop-off",
-          "Free Inspection",
-          "Complimentary Wash",
-        ].map((item) => (
-          <div key={item} className="flex items-center gap-1.5">
-            <Check size={13} className="shrink-0 text-emerald-400" />
-            <span className="text-[10px] font-medium text-white/80 sm:text-[11px]">
-              {item}
-            </span>
-          </div>
-        ))}
+            {/* EYEBROW */}
+            <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+              <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/90 sm:text-[10px]">
+                Premium Automotive Care
+              </span>
+            </div>
 
-      </div>
+            {/* HEADING */}
+            <h1 className="max-w-lg text-[32px] font-extrabold leading-[1.12] tracking-tight sm:text-[42px] lg:text-[48px]">
+              Premium Car Care.
+              <span className="mt-1 block text-blue-400">
+                Without Compromise.
+              </span>
+            </h1>
 
-    </motion.div>
-  </div>
+            {/* DESCRIPTION */}
+            <p className="mt-4 max-w-md text-[12px] leading-6 text-white/75 sm:text-[13px] sm:leading-7">
+              Professional automotive solutions for luxury and everyday
+              vehicles. Expert technicians and advanced diagnostics for
+              complete vehicle care.
+            </p>
 
-  {/* BRAND CAPTION */}
-  <div className="absolute bottom-7 right-8 z-10 hidden text-right lg:block">
-    <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/50">
-      Ritz Auto Care LLC
-    </p>
-    <p className="mt-1 text-xs font-semibold text-white/80">
-      Care That Goes Beyond the Road.
-    </p>
-  </div>
+            {/* LOCATION */}
+            <div className="mt-4 flex items-center gap-2 text-[11px] font-medium text-white/75">
+              <MapPin size={14} className="text-blue-400" />
+              Dubai & Abu Dhabi, UAE
+            </div>
 
-  {/* BOTTOM VIDEO ACCENT */}
-  <div className="absolute bottom-0 left-0 h-[3px] w-full bg-white/10">
-    <div className="h-full w-1/3 bg-royal" />
-  </div>
+            {/* BUTTONS */}
+            <div className="mt-6 flex flex-wrap gap-3">
 
-</section>
+              <a
+                href="#contact"
+                className="group inline-flex items-center gap-2 rounded-full bg-royal px-5 py-3 text-[11px] font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#174DAA] sm:text-xs"
+              >
+                Book Your Service
+                <ArrowRight
+                  size={14}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </a>
+
+              <a
+                href={`tel:${PHONE}`}
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-slate-900 sm:text-xs"
+              >
+                <Phone size={14} />
+                {PHONE}
+              </a>
+
+            </div>
+
+            {/* FREE BENEFITS */}
+            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/20 pt-5">
+
+              {[
+                "Free Pick-up & Drop-off",
+                "Free Inspection",
+                "Complimentary Wash",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-1.5">
+                  <Check size={13} className="shrink-0 text-emerald-400" />
+                  <span className="text-[10px] font-medium text-white/80 sm:text-[11px]">
+                    {item}
+                  </span>
+                </div>
+              ))}
+
+            </div>
+
+          </motion.div>
+        </div>
+
+        {/* BRAND CAPTION */}
+        <div className="absolute bottom-7 right-8 z-10 hidden text-right lg:block">
+          <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/50">
+            Ritz Auto Care LLC
+          </p>
+          <p className="mt-1 text-xs font-semibold text-white/80">
+            Care That Goes Beyond the Road.
+          </p>
+        </div>
+
+        {/* BOTTOM VIDEO ACCENT */}
+        <div className="absolute bottom-0 left-0 h-[3px] w-full bg-white/10">
+          <div className="h-full w-1/3 bg-royal" />
+        </div>
+
+      </section>
 
 
 
@@ -481,206 +598,263 @@ export default function Home() {
       </section>
 
 
-      {/* Premium Services Section */}
 
-      <section
-        id="services"
-        className="relative overflow-hidden bg-[#F4F6FA] py-24"
-      >
-        {/* Background Decoration */}
-        <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/50 blur-[120px]" />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+{/* PREMIUM SERVICES SECTION */}
 
-          <div className="grid items-start gap-14 lg:grid-cols-[0.85fr_1.5fr]">
+<section
+  id="services"
+  className="relative overflow-hidden bg-[#F4F7FB] py-16 sm:py-20"
+>
+  {/* Background Effects */}
+  <div className="pointer-events-none absolute -right-40 top-0 h-[400px] w-[400px] rounded-full bg-blue-200/40 blur-[120px]" />
+  <div className="pointer-events-none absolute -left-40 bottom-0 h-[350px] w-[350px] rounded-full bg-slate-300/40 blur-[120px]" />
 
-            {/* Left Content */}
-            <div className="lg:sticky lg:top-32">
+  <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-              <span className="inline-flex items-center gap-2 rounded-full border border-royal/20 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-royal shadow-sm">
-                <Wrench size={14} />
-                Our Services
-              </span>
+    {/* SECTION HEADING */}
+    <div className="mb-11 text-center">
 
-              <h2 className="mt-7 text-4xl font-extrabold leading-[1.12] tracking-tight text-[#101828] sm:text-5xl">
-                Complete Care.
-                <span className="block text-royal">
-                  Exceptional Performance.
+      <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#1677D2] shadow-sm">
+        <Wrench size={13} />
+        Our Services
+      </span>
+
+      <h2 className="mx-auto mt-5 max-w-3xl text-[25px] font-extrabold leading-[1.25] tracking-tight text-[#101828] sm:text-[28px] lg:text-[30px]">
+        Complete Automotive Care.
+        <span className="block text-[#1677D2]">
+          Excellence in Every Detail.
+        </span>
+      </h2>
+
+      <p className="mx-auto mt-4 max-w-2xl text-[13px] leading-6 text-slate-600 sm:text-sm">
+        From advanced diagnostics to premium vehicle maintenance,
+        experience professional automotive care designed to keep
+        your vehicle performing at its best.
+      </p>
+
+    </div>
+
+    {/* MAIN LAYOUT */}
+    <div className="grid items-start gap-8 lg:grid-cols-[0.75fr_1.65fr]">
+
+      {/* LEFT CONTENT */}
+      <div className="lg:sticky lg:top-28">
+
+        <div className="overflow-hidden rounded-2xl bg-[#081525] p-6 text-white shadow-xl shadow-blue-950/15 sm:p-7">
+
+          <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-300">
+          
+            Why Choose Ritz
+          </span>
+
+          <h3 className="mt-5 text-[23px] font-extrabold leading-tight sm:text-[26px]">
+            Your Car Deserves
+            <span className="block text-[#48A5F5]">
+              Expert Care.
+            </span>
+          </h3>
+
+          <p className="mt-4 text-[13px] leading-6 text-slate-300">
+            We combine professional expertise, modern diagnostic
+            technology and quality workmanship to deliver reliable
+            automotive solutions.
+          </p>
+
+          {/* HIGHLIGHTS */}
+          <div className="mt-7 space-y-4">
+
+            {[
+              "Professional automotive technicians",
+              "Advanced diagnostic equipment",
+              "Quality parts and workmanship",
+              "Convenient customer service",
+            ].map((item) => (
+
+              <div key={item} className="flex items-center gap-3">
+
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-blue-500/20 text-blue-300">
+                  <Check size={13} strokeWidth={3} />
                 </span>
-              </h2>
 
-              <p className="mt-6 max-w-lg text-base leading-8 text-slate-600 sm:text-lg">
-                Everything your vehicle needs, all under one roof.
-                From routine maintenance to advanced automotive
-                repairs, we deliver dealer-standard service with
-                professional care.
-              </p>
-
-              {/* Highlights */}
-              <div className="mt-9 space-y-5">
-
-                {[
-                  "Certified automotive technicians",
-                  "Advanced diagnostic equipment",
-                  "Premium quality parts and workmanship",
-                ].map((item, index) => (
-
-                  <div key={item} className="flex items-center gap-3">
-
-                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-royal text-white">
-                      <Check size={15} strokeWidth={3} />
-                    </span>
-
-                    <span className="text-sm font-semibold text-slate-700">
-                      {item}
-                    </span>
-
-                  </div>
-
-                ))}
+                <span className="text-[12px] font-medium text-slate-200 sm:text-[13px]">
+                  {item}
+                </span>
 
               </div>
 
-              {/* CTA */}
-              <div className="mt-10 flex flex-wrap items-center gap-4">
+            ))}
 
-                <a
-                  href="#contact"
-                  className="inline-flex items-center gap-3 rounded-lg bg-royal px-7 py-4 font-bold text-white shadow-lg shadow-royal/20 transition-all duration-300 hover:-translate-y-1 hover:bg-[#101828]"
-                >
-                  Explore Our Services
-                  <ArrowUpRight size={18} />
-                </a>
+          </div>
 
-              </div>
+          {/* EXPERIENCE */}
+          <div className="mt-8 flex items-center gap-4 border-t border-white/10 pt-6">
 
-              {/* Experience Highlight */}
-              <div className="mt-12 flex items-center gap-4 border-t border-slate-200 pt-8">
-
-                <div className="font-display text-5xl font-black text-royal">
-                  20+
-                </div>
-
-                <div>
-                  <p className="font-bold text-[#101828]">
-                    Years of Experience
-                  </p>
-
-                  <p className="mt-1 text-sm text-slate-500">
-                    Professional automotive care
-                  </p>
-                </div>
-
-              </div>
-
+            <div className="text-4xl font-black text-[#48A5F5]">
+              20+
             </div>
 
-            {/* Right Service Cards */}
             <div>
+              <p className="text-sm font-bold text-white">
+                Years of Experience
+              </p>
 
-              <div className="mb-6 flex items-center justify-between">
-
-                <h3 className="text-lg font-extrabold text-[#101828]">
-                  What We Offer
-                </h3>
-
-                <span className="rounded-full bg-white px-4 py-2 text-xs font-bold text-royal shadow-sm">
-                  09 Services
-                </span>
-
-              </div>
-
-              <motion.div
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ staggerChildren: 0.07 }}
-                className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5"
-              >
-
-                {services.map(({ i: Icon, t }, index) => (
-
-                  <motion.a
-                    key={t}
-                    href="#contact"
-                    variants={up}
-                    whileHover={{ y: -7 }}
-                    className="group relative flex min-h-[180px] flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all duration-300 hover:border-royal/40 hover:shadow-xl hover:shadow-royal/10 sm:min-h-[205px] sm:p-6"
-                  >
-
-                    {/* Background Hover Effect */}
-                    <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-royal/5 transition-all duration-500 group-hover:scale-[2.5] group-hover:bg-royal/10" />
-
-                    {/* Number */}
-                    <div className="relative flex items-center justify-between">
-
-                      <span className="grid h-12 w-12 place-items-center rounded-xl bg-[#F0F4FA] text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white">
-                        <Icon size={25} strokeWidth={1.7} />
-                      </span>
-
-                      <span className="text-xs font-bold tracking-widest text-slate-300 transition-colors group-hover:text-royal">
-                        {(index + 1).toString().padStart(2, "0")}
-                      </span>
-
-                    </div>
-
-                    {/* Title */}
-                    <div className="relative mt-8">
-
-                      <h3 className="text-sm font-extrabold leading-snug text-[#101828] transition-colors group-hover:text-royal sm:text-base">
-                        {t}
-                      </h3>
-
-                      <div className="mt-4 flex items-center justify-between">
-
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 transition-colors group-hover:text-royal">
-                          Explore Service
-                        </span>
-
-                        <ArrowUpRight
-                          size={17}
-                          className="text-slate-400 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-royal"
-                        />
-
-                      </div>
-
-                    </div>
-
-                  </motion.a>
-
-                ))}
-
-              </motion.div>
-
-              {/* Bottom Info */}
-              <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#101828] px-6 py-5 text-white">
-
-                <div>
-                  <p className="font-bold">
-                    Need professional car assistance?
-                  </p>
-
-                  <p className="mt-1 text-xs text-slate-400">
-                    Our team is ready to help you.
-                  </p>
-                </div>
-
-                <a
-                  href={WA}
-                  className="inline-flex items-center gap-2 rounded-lg bg-green-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-green-600"
-                >
-                  <MessageCircle size={17} />
-                  WhatsApp
-                </a>
-
-              </div>
-
+              <p className="mt-1 text-[11px] text-slate-400">
+                Professional automotive care
+              </p>
             </div>
 
           </div>
 
+          {/* CTA */}
+          <a
+            href="#contact"
+            className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#1677D2] px-5 py-3.5 text-[13px] font-bold text-white shadow-lg shadow-blue-900/30 transition-all duration-300 hover:-translate-y-1 hover:bg-[#2196F3]"
+          >
+            Book Your Service
+            <ArrowUpRight size={16} />
+          </a>
+
         </div>
-      </section>
+
+      </div>
+
+      {/* RIGHT SERVICE CARDS */}
+      <div>
+
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+
+          <div>
+            <h3 className="text-lg font-extrabold text-[#101828]">
+              Explore Our Services
+            </h3>
+
+            <p className="mt-1 text-xs text-slate-500">
+              Professional solutions for every vehicle.
+            </p>
+          </div>
+
+          <span className="rounded-full border border-blue-100 bg-white px-3.5 py-2 text-[11px] font-bold text-[#1677D2] shadow-sm">
+            {String(services.length).padStart(2, "0")} Services
+          </span>
+
+        </div>
+
+        {/* SERVICE IMAGES */}
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: {},
+            show: {
+              transition: { staggerChildren: 0.08 },
+            },
+          }}
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+        >
+
+          {services.map(({ i: Icon, t }, index) => {
+
+            const serviceImages = [
+              "/services/engine.jpeg",
+              "/services/car-repair.jpeg",
+              "/services/oil-change.jpeg",
+              "/services/ac-service.jpeg",
+              "/services/car-detailing.jpeg",
+              "/services/car-upholstery.png",
+              "/services/Modification.png",
+              "/services/car-inspection.png",
+              "/services/auto-spa.png",
+            ];
+
+            return (
+
+              <motion.a
+                key={t}
+                href="#contact"
+                variants={{
+                  hidden: { opacity: 0, y: 25 },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.45 },
+                  },
+                }}
+                whileHover={{
+                  y: -6,
+                  rotateX: 2,
+                  rotateY: -2,
+                  scale: 1.01,
+                }}
+                style={{ transformPerspective: 1000 }}
+                className="group relative isolate min-h-[250px] overflow-hidden rounded-xl border border-slate-200 bg-[#101828] shadow-sm transition-shadow duration-500 hover:shadow-xl hover:shadow-blue-900/20 sm:min-h-[265px]"
+              >
+
+                {/* SERVICE IMAGE */}
+                <Image
+                  src={serviceImages[index] || "/images/services/engine.jpg"}
+                  alt={t}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
+
+                {/* IMAGE OVERLAY */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#06101E] via-[#06101E]/40 to-black/5 transition-colors duration-500 group-hover:from-[#06101E] group-hover:via-[#06101E]/60" />
+
+                {/* TOP CONTENT */}
+                <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
+
+                  <span className="grid h-10 w-10 place-items-center rounded-lg border border-white/20 bg-white/15 text-white shadow-lg backdrop-blur-md transition-all duration-300 group-hover:border-[#1677D2] group-hover:bg-[#1677D2]">
+                    <Icon size={20} strokeWidth={1.8} />
+                  </span>
+
+                  <span className="rounded-full border border-white/20 bg-black/20 px-2.5 py-1 text-[10px] font-bold tracking-widest text-white backdrop-blur-md">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                </div>
+
+                {/* BOTTOM CONTENT */}
+                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+
+                  <div className="mb-2.5 h-[2px] w-8 rounded-full bg-[#48A5F5] transition-all duration-500 group-hover:w-16" />
+
+                  <h3 className="text-[15px] font-bold leading-snug text-white sm:text-base">
+                    {t}
+                  </h3>
+
+                  <div className="mt-3 flex items-center justify-between">
+
+                    <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-blue-200">
+                      Explore Service
+                    </span>
+
+                    <span className="grid h-8 w-8 place-items-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md transition-all duration-300 group-hover:border-[#1677D2] group-hover:bg-[#1677D2]">
+                      <ArrowUpRight size={15} />
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </motion.a>
+
+            );
+          })}
+
+        </motion.div>
+
+     
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
 
 
 
@@ -955,277 +1129,277 @@ export default function Home() {
 
       {/* ROADSIDE ASSISTANCE - PREMIUM LIGHT SECTION */}
 
-    
-<section
-  id="roadside"
-  className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-24"
->
-  {/* BACKGROUND EFFECTS */}
-  <div className="pointer-events-none absolute -right-40 top-0 h-[500px] w-[500px] rounded-full bg-blue-100/70 blur-[140px]" />
-  <div className="pointer-events-none absolute -left-40 bottom-0 h-[400px] w-[400px] rounded-full bg-slate-200/70 blur-[130px]" />
 
-  <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-
-    {/* TOP CONTENT */}
-    <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.95fr] lg:gap-16">
-
-      {/* LEFT CONTENT */}
-      <motion.div
-        variants={up}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
+      <section
+        id="roadside"
+        className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-24"
       >
-        {/* BADGE */}
-        <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-royal sm:text-xs">
-          <Truck size={15} />
-          Roadside Assistance
-        </span>
+        {/* BACKGROUND EFFECTS */}
+        <div className="pointer-events-none absolute -right-40 top-0 h-[500px] w-[500px] rounded-full bg-blue-100/70 blur-[140px]" />
+        <div className="pointer-events-none absolute -left-40 bottom-0 h-[400px] w-[400px] rounded-full bg-slate-200/70 blur-[130px]" />
 
-        {/* HEADING */}
-        <h2 className="mt-6 text-3xl font-extrabold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-[46px]">
-          Help is Closer
-          <span className="block text-royal">
-            Than You Think.
-          </span>
-        </h2>
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
 
-        {/* DESCRIPTION */}
-        <p className="mt-5 max-w-xl text-sm leading-7 text-slate-500 sm:text-base sm:leading-8">
-          Vehicle trouble shouldn't ruin your journey. From unexpected
-          battery failures to flat tyres and fuel emergencies, get
-          professional roadside assistance when you need it.
-        </p>
+          {/* TOP CONTENT */}
+          <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.95fr] lg:gap-16">
 
-        {/* QUICK HIGHLIGHTS */}
-        <div className="mt-8 grid max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
-          {[
-            { i: ShieldCheck, t: "Professional Support" },
-            { i: Wrench, t: "Expert Assistance" },
-            { i: Gauge, t: "Reliable Solutions" },
-            { i: MapPin, t: "Dubai & Abu Dhabi" },
-          ].map(({ i: Icon, t }, index) => (
+            {/* LEFT CONTENT */}
             <motion.div
-              key={t}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              variants={up}
+              initial="hidden"
+              whileInView="show"
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
-              className="flex items-center gap-3"
             >
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-royal shadow-sm">
-                <Icon size={19} />
+              {/* BADGE */}
+              <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-royal sm:text-xs">
+                <Truck size={15} />
+                Roadside Assistance
+              </span>
+
+              {/* HEADING */}
+              <h2 className="mt-6 text-3xl font-extrabold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-[46px]">
+                Help is Closer
+                <span className="block text-royal">
+                  Than You Think.
+                </span>
+              </h2>
+
+              {/* DESCRIPTION */}
+              <p className="mt-5 max-w-xl text-sm leading-7 text-slate-500 sm:text-base sm:leading-8">
+                Vehicle trouble shouldn't ruin your journey. From unexpected
+                battery failures to flat tyres and fuel emergencies, get
+                professional roadside assistance when you need it.
+              </p>
+
+              {/* QUICK HIGHLIGHTS */}
+              <div className="mt-8 grid max-w-xl grid-cols-1 gap-4 sm:grid-cols-2">
+                {[
+                  { i: ShieldCheck, t: "Professional Support" },
+                  { i: Wrench, t: "Expert Assistance" },
+                  { i: Gauge, t: "Reliable Solutions" },
+                  { i: MapPin, t: "Dubai & Abu Dhabi" },
+                ].map(({ i: Icon, t }, index) => (
+                  <motion.div
+                    key={t}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.08 }}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-royal shadow-sm">
+                      <Icon size={19} />
+                    </div>
+
+                    <span className="text-xs font-semibold text-slate-700 sm:text-sm">
+                      {t}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* RIGHT IMAGE SHOWCASE */}
+            <motion.div
+              variants={up}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="relative pb-8 sm:pb-10"
+            >
+              {/* MAIN IMAGE */}
+              <div className="group relative h-[350px] overflow-hidden rounded-[28px] bg-slate-900 shadow-2xl shadow-slate-300/60 sm:h-[450px]">
+
+                <Image
+                  src="/roadside-main.jpeg"
+                  alt="Professional roadside vehicle assistance"
+                  fill
+                  priority={false}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+
+                {/* IMAGE OVERLAY */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080B14]/90 via-[#080B14]/15 to-[#080B14]/10" />
+
+                {/* TOP LABEL */}
+                <div className="absolute left-5 top-5 sm:left-7 sm:top-7">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+                    <ShieldCheck size={15} />
+                    Ritz Auto Care LLC
+                  </span>
+                </div>
+
+                {/* BOTTOM CONTENT */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+
+                  <span className="inline-flex items-center rounded-full bg-royal px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-white">
+                    Professional Roadside Support
+                  </span>
+
+                  <h3 className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl">
+                    Help When You
+                    <span className="block text-blue-400">
+                      Need It Most.
+                    </span>
+                  </h3>
+
+                  <p className="mt-3 max-w-sm text-xs leading-6 text-white/75 sm:text-sm">
+                    Reliable vehicle assistance for unexpected
+                    situations on the road.
+                  </p>
+
+                </div>
               </div>
 
-              <span className="text-xs font-semibold text-slate-700 sm:text-sm">
-                {t}
-              </span>
+              {/* FLOATING BADGE */}
+              <div className="absolute -bottom-1 -left-2 flex items-center gap-3 rounded-xl border border-slate-100 bg-white px-4 py-3 shadow-xl sm:-left-5 sm:px-5">
+
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-royal text-white">
+                  <Check size={21} strokeWidth={2.5} />
+                </div>
+
+                <div>
+                  <p className="text-xs font-extrabold text-slate-900 sm:text-sm">
+                    Expert Vehicle Care
+                  </p>
+                  <p className="mt-1 text-[10px] text-slate-500">
+                    Professional assistance
+                  </p>
+                </div>
+
+              </div>
+
+              {/* TOP FLOATING BADGE */}
+              <div className="absolute right-3 top-20 flex items-center gap-2 rounded-xl border border-white/50 bg-white/95 px-3 py-3 shadow-xl backdrop-blur-md sm:right-5">
+
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-600">
+                  <ShieldCheck size={19} />
+                </span>
+
+                <div>
+                  <p className="text-xs font-extrabold text-slate-900">
+                    Quality Support
+                  </p>
+                  <p className="text-[10px] text-slate-500">
+                    Customer focused
+                  </p>
+                </div>
+
+              </div>
             </motion.div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* RIGHT IMAGE SHOWCASE */}
-      <motion.div
-        variants={up}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="relative pb-8 sm:pb-10"
-      >
-        {/* MAIN IMAGE */}
-        <div className="group relative h-[350px] overflow-hidden rounded-[28px] bg-slate-900 shadow-2xl shadow-slate-300/60 sm:h-[450px]">
-
-          <Image
-            src="/roadside-main.jpeg"
-            alt="Professional roadside vehicle assistance"
-            fill
-            priority={false}
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-
-          {/* IMAGE OVERLAY */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080B14]/90 via-[#080B14]/15 to-[#080B14]/10" />
-
-          {/* TOP LABEL */}
-          <div className="absolute left-5 top-5 sm:left-7 sm:top-7">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
-              <ShieldCheck size={15} />
-              Ritz Auto Care LLC
-            </span>
           </div>
 
-          {/* BOTTOM CONTENT */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+          {/* SERVICES SECTION HEADING */}
+          <div className="mb-8 mt-24 flex flex-wrap items-end justify-between gap-5">
 
-            <span className="inline-flex items-center rounded-full bg-royal px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-white">
-              Professional Roadside Support
-            </span>
-
-            <h3 className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl">
-              Help When You
-              <span className="block text-blue-400">
-                Need It Most.
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-royal sm:text-xs">
+                Our Services
               </span>
-            </h3>
 
-            <p className="mt-3 max-w-sm text-xs leading-6 text-white/75 sm:text-sm">
-              Reliable vehicle assistance for unexpected
-              situations on the road.
-            </p>
+              <h3 className="mt-3 text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl lg:text-4xl">
+                Roadside Solutions
+                <span className="block text-royal sm:inline sm:pl-2">
+                  For Every Situation.
+                </span>
+              </h3>
 
-          </div>
-        </div>
+              <p className="mt-3 max-w-xl text-xs leading-7 text-slate-500 sm:text-sm">
+                Reliable assistance to help you handle unexpected vehicle
+                problems and get back on the road.
+              </p>
+            </div>
 
-        {/* FLOATING BADGE */}
-        <div className="absolute -bottom-1 -left-2 flex items-center gap-3 rounded-xl border border-slate-100 bg-white px-4 py-3 shadow-xl sm:-left-5 sm:px-5">
-
-          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-royal text-white">
-            <Check size={21} strokeWidth={2.5} />
-          </div>
-
-          <div>
-            <p className="text-xs font-extrabold text-slate-900 sm:text-sm">
-              Expert Vehicle Care
-            </p>
-            <p className="mt-1 text-[10px] text-slate-500">
-              Professional assistance
-            </p>
+            <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[10px] font-bold text-slate-600 shadow-sm sm:text-xs">
+              04 Assistance Categories
+            </span>
           </div>
 
-        </div>
 
-        {/* TOP FLOATING BADGE */}
-        <div className="absolute right-3 top-20 flex items-center gap-2 rounded-xl border border-white/50 bg-white/95 px-3 py-3 shadow-xl backdrop-blur-md sm:right-5">
-
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-600">
-            <ShieldCheck size={19} />
-          </span>
-
-          <div>
-            <p className="text-xs font-extrabold text-slate-900">
-              Quality Support
-            </p>
-            <p className="text-[10px] text-slate-500">
-              Customer focused
-            </p>
-          </div>
-
-        </div>
-      </motion.div>
-    </div>
-
-    {/* SERVICES SECTION HEADING */}
-    <div className="mb-8 mt-24 flex flex-wrap items-end justify-between gap-5">
-
-      <div>
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-royal sm:text-xs">
-          Our Services
-        </span>
-
-        <h3 className="mt-3 text-2xl font-extrabold leading-tight text-slate-900 sm:text-3xl lg:text-4xl">
-          Roadside Solutions
-          <span className="block text-royal sm:inline sm:pl-2">
-            For Every Situation.
-          </span>
-        </h3>
-
-        <p className="mt-3 max-w-xl text-xs leading-7 text-slate-500 sm:text-sm">
-          Reliable assistance to help you handle unexpected vehicle
-          problems and get back on the road.
-        </p>
-      </div>
-
-      <span className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[10px] font-bold text-slate-600 shadow-sm sm:text-xs">
-        04 Assistance Categories
-      </span>
-    </div>
-
-   
-{/* ROAD SERVICE CARDS */}
-<motion.div
-  initial="hidden"
-  whileInView="show"
-  viewport={{ once: true, margin: "-60px" }}
-  transition={{ staggerChildren: 0.1 }}
-  className="grid items-start gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4"
->
-  {road.map(({ i: Icon, t, d }, index) => {
-
-    const roadsideImages = [
-      "/battery-jumpstart.jpeg",
-      "/jump-start.jpeg",
-      "/flat-tyre.jpeg",
-      "/fuel-delivery.jpeg",
-    ];
-
-    return (
-      <motion.div
-        key={t}
-        variants={up}
-        whileHover={{ y: -5 }}
-        className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-300 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/60 sm:p-4"
-      >
-
-        {/* SERVICE IMAGE */}
-        <div className="relative -mx-4 -mt-4 mb-4 h-36 overflow-hidden rounded-t-xl bg-slate-100 sm:h-40 lg:h-36 xl:h-40">
-
-          <Image
-            src={roadsideImages[index]}
-            alt={`${t} roadside assistance`}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-
-          {/* IMAGE LABEL */}
-          <span className="absolute bottom-2.5 left-2.5 rounded-md bg-white/95 px-2.5 py-1 text-[9px] font-bold text-slate-800 shadow sm:text-[10px]">
-            {t}
-          </span>
-
-          {/* NUMBER */}
-          <span className="absolute right-2.5 top-2.5 grid h-7 w-7 place-items-center rounded-full bg-white/95 text-[10px] font-black text-royal shadow sm:h-8 sm:w-8 sm:text-xs">
-            0{index + 1}
-          </span>
-        </div>
-
-        {/* CARD ICON */}
-        <div className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white sm:h-11 sm:w-11">
-          <Icon size={21} strokeWidth={1.7} />
-        </div>
-
-        {/* CARD CONTENT */}
-        <div className="mt-3">
-
-          <h3 className="text-sm font-extrabold leading-6 text-slate-900 sm:text-base">
-            {t}
-          </h3>
-
-          <p className="mt-1.5 text-xs leading-5 text-slate-500 sm:text-[13px] sm:leading-6">
-            {d}
-          </p>
-
-          {/* REQUEST ASSISTANCE */}
-          <a
-            href={`tel:${PHONE}`}
-            className="mt-4 inline-flex items-center gap-2 border-t border-slate-100 pt-3 text-[11px] font-bold text-royal transition-colors hover:text-slate-900 sm:text-xs"
+          {/* ROAD SERVICE CARDS */}
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ staggerChildren: 0.1 }}
+            className="grid items-start gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4"
           >
-            Request Assistance
-            <ArrowUpRight size={15} />
-          </a>
+            {road.map(({ i: Icon, t, d }, index) => {
+
+              const roadsideImages = [
+                "/battery-jumpstart.jpeg",
+                "/jump-start.jpeg",
+                "/flat-tyre.jpeg",
+                "/fuel-delivery.jpeg",
+              ];
+
+              return (
+                <motion.div
+                  key={t}
+                  variants={up}
+                  whileHover={{ y: -5 }}
+                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-300 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-200/60 sm:p-4"
+                >
+
+                  {/* SERVICE IMAGE */}
+                  <div className="relative -mx-4 -mt-4 mb-4 h-36 overflow-hidden rounded-t-xl bg-slate-100 sm:h-40 lg:h-36 xl:h-40">
+
+                    <Image
+                      src={roadsideImages[index]}
+                      alt={`${t} roadside assistance`}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+
+                    {/* IMAGE LABEL */}
+                    <span className="absolute bottom-2.5 left-2.5 rounded-md bg-white/95 px-2.5 py-1 text-[9px] font-bold text-slate-800 shadow sm:text-[10px]">
+                      {t}
+                    </span>
+
+                    {/* NUMBER */}
+                    <span className="absolute right-2.5 top-2.5 grid h-7 w-7 place-items-center rounded-full bg-white/95 text-[10px] font-black text-royal shadow sm:h-8 sm:w-8 sm:text-xs">
+                      0{index + 1}
+                    </span>
+                  </div>
+
+                  {/* CARD ICON */}
+                  <div className="grid h-10 w-10 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-royal transition-all duration-300 group-hover:bg-royal group-hover:text-white sm:h-11 sm:w-11">
+                    <Icon size={21} strokeWidth={1.7} />
+                  </div>
+
+                  {/* CARD CONTENT */}
+                  <div className="mt-3">
+
+                    <h3 className="text-sm font-extrabold leading-6 text-slate-900 sm:text-base">
+                      {t}
+                    </h3>
+
+                    <p className="mt-1.5 text-xs leading-5 text-slate-500 sm:text-[13px] sm:leading-6">
+                      {d}
+                    </p>
+
+                    {/* REQUEST ASSISTANCE */}
+                    <a
+                      href={`tel:${PHONE}`}
+                      className="mt-4 inline-flex items-center gap-2 border-t border-slate-100 pt-3 text-[11px] font-bold text-royal transition-colors hover:text-slate-900 sm:text-xs"
+                    >
+                      Request Assistance
+                      <ArrowUpRight size={15} />
+                    </a>
+
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
 
         </div>
-      </motion.div>
-    );
-  })}
-</motion.div>
-
-
-  </div>
-</section>
+      </section>
 
 
 
@@ -1758,7 +1932,7 @@ export default function Home() {
             {brands.slice(0, 50).map((brand, index) => (
 
               <motion.div
-                key={brand.name}
+                key={`${brand.name}-${index}`}
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -1859,7 +2033,7 @@ export default function Home() {
             </span>
 
             <h2 className="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-             Trusted by Car Owners
+              Trusted by Car Owners
               <span className="block text-royal">
                 Loved by Customers.
               </span>
@@ -2082,355 +2256,355 @@ export default function Home() {
 
 
 
- 
-{/* PREMIUM CONTACT CTA */}
 
-<section
-  id="contact"
-  className="relative isolate overflow-hidden bg-royal py-12 text-white sm:py-16 md:py-20 lg:py-24"
->
-  {/* BACKGROUND DECORATIONS */}
-  <div className="pointer-events-none absolute -right-32 -top-40 h-[420px] w-[420px] rounded-full border border-white/10" />
-  <div className="pointer-events-none absolute -right-20 -top-28 h-[320px] w-[320px] rounded-full border border-white/10" />
-  <div className="pointer-events-none absolute -bottom-40 -left-32 h-[400px] w-[400px] rounded-full bg-white/10 blur-[100px]" />
+      {/* PREMIUM CONTACT CTA */}
 
-  {/* CONTENT */}
-  <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+      <section
+        id="contact"
+        className="relative isolate overflow-hidden bg-royal py-12 text-white sm:py-16 md:py-20 lg:py-24"
+      >
+        {/* BACKGROUND DECORATIONS */}
+        <div className="pointer-events-none absolute -right-32 -top-40 h-[420px] w-[420px] rounded-full border border-white/10" />
+        <div className="pointer-events-none absolute -right-20 -top-28 h-[320px] w-[320px] rounded-full border border-white/10" />
+        <div className="pointer-events-none absolute -bottom-40 -left-32 h-[400px] w-[400px] rounded-full bg-white/10 blur-[100px]" />
 
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7 }}
-      className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[1fr_auto] lg:gap-14"
-    >
+        {/* CONTENT */}
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
 
-      {/* LEFT CONTENT */}
-      <div className="max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[1fr_auto] lg:gap-14"
+          >
 
-        {/* BADGE */}
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-white/90 backdrop-blur-md sm:px-4 sm:text-[10px] sm:tracking-[0.2em] lg:text-xs">
-          <Sparkles size={14} />
-          Your Car Deserves The Best
-        </span>
+            {/* LEFT CONTENT */}
+            <div className="max-w-2xl">
 
-        {/* HEADING */}
-        <h2 className="mt-5 text-2xl font-black leading-[1.2] tracking-tight sm:mt-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-          Ready for Dealer-Level Service
-          <span className="mt-1.5 block text-white/75 sm:mt-2">
-            Without the Dealer Price?
-          </span>
-        </h2>
+              {/* BADGE */}
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-[9px] font-bold uppercase tracking-[0.15em] text-white/90 backdrop-blur-md sm:px-4 sm:text-[10px] sm:tracking-[0.2em] lg:text-xs">
+                <Sparkles size={14} />
+                Your Car Deserves The Best
+              </span>
 
-        {/* DESCRIPTION */}
-        <p className="mt-4 max-w-xl text-xs leading-6 text-white/75 sm:mt-5 sm:text-sm sm:leading-7 lg:text-base lg:leading-8">
-          Experience professional automotive care with expert
-          technicians, quality workmanship and reliable service.
-          Get in touch with Ritz Auto Care today.
-        </p>
+              {/* HEADING */}
+              <h2 className="mt-5 text-2xl font-black leading-[1.2] tracking-tight sm:mt-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+                Ready for Dealer-Level Service
+                <span className="mt-1.5 block text-white/75 sm:mt-2">
+                  Without the Dealer Price?
+                </span>
+              </h2>
 
-        {/* LOCATION */}
-        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-[11px] font-medium text-white/80 sm:mt-6 sm:gap-x-6 sm:text-xs lg:text-sm">
-          <span className="inline-flex items-center gap-2">
-            <MapPin size={15} className="shrink-0 sm:h-[17px] sm:w-[17px]" />
-            Dubai &amp; Abu Dhabi
-          </span>
+              {/* DESCRIPTION */}
+              <p className="mt-4 max-w-xl text-xs leading-6 text-white/75 sm:mt-5 sm:text-sm sm:leading-7 lg:text-base lg:leading-8">
+                Experience professional automotive care with expert
+                technicians, quality workmanship and reliable service.
+                Get in touch with Ritz Auto Care today.
+              </p>
 
-          <span className="inline-flex items-center gap-2">
-            <ShieldCheck size={15} className="shrink-0 sm:h-[17px] sm:w-[17px]" />
-            Professional Vehicle Care
-          </span>
+              {/* LOCATION */}
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-[11px] font-medium text-white/80 sm:mt-6 sm:gap-x-6 sm:text-xs lg:text-sm">
+                <span className="inline-flex items-center gap-2">
+                  <MapPin size={15} className="shrink-0 sm:h-[17px] sm:w-[17px]" />
+                  Dubai &amp; Abu Dhabi
+                </span>
+
+                <span className="inline-flex items-center gap-2">
+                  <ShieldCheck size={15} className="shrink-0 sm:h-[17px] sm:w-[17px]" />
+                  Professional Vehicle Care
+                </span>
+              </div>
+
+            </div>
+
+            {/* RIGHT ACTION CARD */}
+            <div className="w-full rounded-2xl border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-xl sm:p-6 md:p-7 lg:w-[340px]">
+
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/65 sm:text-xs sm:tracking-[0.18em]">
+                Let's Get Started
+              </p>
+
+              <h3 className="mt-2 text-xl font-extrabold text-white sm:mt-3 sm:text-2xl">
+                Book Your Service
+              </h3>
+
+              <p className="mt-2 text-xs leading-5 text-white/70 sm:text-sm sm:leading-6">
+                Speak with our team and get assistance for your vehicle.
+              </p>
+
+              {/* WHATSAPP BUTTON */}
+              <a
+                href={WA}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3.5 text-xs font-extrabold text-royal shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#101828] hover:text-white sm:mt-7 sm:gap-3 sm:px-6 sm:py-4 sm:text-sm"
+              >
+                <MessageCircle size={18} className="shrink-0 sm:h-5 sm:w-5" />
+                WhatsApp Us
+                <ArrowUpRight
+                  size={16}
+                  className="shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 sm:h-[17px] sm:w-[17px]"
+                />
+              </a>
+
+              {/* CALL BUTTON */}
+              <a
+                href={`tel:${PHONE}`}
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/5 px-4 py-3.5 text-xs font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 sm:gap-3 sm:px-6 sm:py-4 sm:text-sm"
+              >
+                <Phone size={17} className="shrink-0 sm:h-[19px] sm:w-[19px]" />
+                Call {PHONE}
+              </a>
+
+              {/* FOOTNOTE */}
+              <div className="mt-4 flex items-center justify-center gap-2 border-t border-white/15 pt-4 text-center text-[10px] leading-5 text-white/65 sm:mt-5 sm:pt-5 sm:text-[11px]">
+                <ShieldCheck size={14} className="shrink-0 sm:h-[15px] sm:w-[15px]" />
+                We're here to help with your vehicle care needs.
+              </div>
+
+            </div>
+
+          </motion.div>
+
         </div>
-
-      </div>
-
-      {/* RIGHT ACTION CARD */}
-      <div className="w-full rounded-2xl border border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-xl sm:p-6 md:p-7 lg:w-[340px]">
-
-        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/65 sm:text-xs sm:tracking-[0.18em]">
-          Let's Get Started
-        </p>
-
-        <h3 className="mt-2 text-xl font-extrabold text-white sm:mt-3 sm:text-2xl">
-          Book Your Service
-        </h3>
-
-        <p className="mt-2 text-xs leading-5 text-white/70 sm:text-sm sm:leading-6">
-          Speak with our team and get assistance for your vehicle.
-        </p>
-
-        {/* WHATSAPP BUTTON */}
-        <a
-          href={WA}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3.5 text-xs font-extrabold text-royal shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#101828] hover:text-white sm:mt-7 sm:gap-3 sm:px-6 sm:py-4 sm:text-sm"
-        >
-          <MessageCircle size={18} className="shrink-0 sm:h-5 sm:w-5" />
-          WhatsApp Us
-          <ArrowUpRight
-            size={16}
-            className="shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 sm:h-[17px] sm:w-[17px]"
-          />
-        </a>
-
-        {/* CALL BUTTON */}
-        <a
-          href={`tel:${PHONE}`}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/5 px-4 py-3.5 text-xs font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 sm:gap-3 sm:px-6 sm:py-4 sm:text-sm"
-        >
-          <Phone size={17} className="shrink-0 sm:h-[19px] sm:w-[19px]" />
-          Call {PHONE}
-        </a>
-
-        {/* FOOTNOTE */}
-        <div className="mt-4 flex items-center justify-center gap-2 border-t border-white/15 pt-4 text-center text-[10px] leading-5 text-white/65 sm:mt-5 sm:pt-5 sm:text-[11px]">
-          <ShieldCheck size={14} className="shrink-0 sm:h-[15px] sm:w-[15px]" />
-          We're here to help with your vehicle care needs.
-        </div>
-
-      </div>
-
-    </motion.div>
-
-  </div>
-</section>
+      </section>
 
 
 
       {/* Footer */}
 
 
-<footer className="relative overflow-hidden bg-ink text-steel">
-  {/* Decorative Background */}
-  <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-royal/10 blur-3xl" />
-  <div className="pointer-events-none absolute -bottom-40 -left-32 h-80 w-80 rounded-full bg-bright/10 blur-3xl" />
+      <footer className="relative overflow-hidden bg-ink text-steel">
+        {/* Decorative Background */}
+        <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-royal/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-40 -left-32 h-80 w-80 rounded-full bg-bright/10 blur-3xl" />
 
-  <div className="relative mx-auto max-w-7xl px-4 pb-8 pt-12 sm:px-6 sm:pb-10 sm:pt-16 lg:px-8 lg:pt-20">
+        <div className="relative mx-auto max-w-7xl px-4 pb-8 pt-12 sm:px-6 sm:pb-10 sm:pt-16 lg:px-8 lg:pt-20">
 
-    {/* Main Footer Grid */}
-    <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-8 sm:gap-y-12 lg:grid-cols-12 lg:gap-8">
+          {/* Main Footer Grid */}
+          <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-8 sm:gap-y-12 lg:grid-cols-12 lg:gap-8">
 
-      {/* BRAND SECTION */}
-      <div className="col-span-2 lg:col-span-4">
-        <a
-          href="#home"
-          aria-label="Ritz Auto Care homepage"
-          className="inline-flex"
-        >
-          <Image
-            src="/logo.png"
-            alt="Ritz Auto Care LLC"
-            width={190}
-            height={55}
-            className="h-10 w-auto object-contain sm:h-12"
-          />
-        </a>
-
-        <p className="mt-4 max-w-sm text-xs leading-6 text-steel/80 sm:mt-5 sm:text-sm sm:leading-7">
-          Experience dealer-standard automotive care with professional
-          service, reliable solutions and quality workmanship in Dubai
-          and Abu Dhabi.
-        </p>
-
-        {/* Action Buttons */}
-        <div className="mt-5 flex flex-wrap gap-2.5 sm:mt-6 sm:gap-3">
-          <a
-            href={WA}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Chat with Ritz Auto Care on WhatsApp"
-            className="inline-flex items-center gap-2 rounded-full bg-royal px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-bright hover:text-ink sm:px-5 sm:py-3 sm:text-sm"
-          >
-            <MessageCircle size={16} />
-            WhatsApp Us
-            <ArrowUpRight size={14} />
-          </a>
-
-          <a
-            href={`tel:${PHONE}`}
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-xs font-semibold text-white transition hover:border-bright hover:text-bright sm:px-5 sm:py-3 sm:text-sm"
-          >
-            <Phone size={15} />
-            Call Now
-          </a>
-        </div>
-      </div>
-
-      {/* SERVICES */}
-      <div className="col-span-1 min-w-0 lg:col-span-2">
-        <h3 className="mb-4 text-sm font-bold text-white sm:mb-6 sm:text-base">
-          Our Services
-          <span className="mt-2 block h-0.5 w-8 rounded-full bg-bright" />
-        </h3>
-
-        <ul className="space-y-3 text-[11px] sm:space-y-3.5 sm:text-sm">
-          {[
-            "Car Battery Change",
-            "Jump Start",
-            "Flat Tyre Change",
-            "Fuel Delivery",
-            "Car Oil Change",
-            "Car AC Repair",
-          ].map((service) => (
-            <li key={service}>
+            {/* BRAND SECTION */}
+            <div className="col-span-2 lg:col-span-4">
               <a
-                href="#services"
-                className="group inline-flex items-start gap-1.5 transition-colors hover:text-white sm:gap-2"
+                href="#home"
+                aria-label="Ritz Auto Care homepage"
+                className="inline-flex"
               >
-                <ArrowRight
-                  size={12}
-                  className="mt-0.5 shrink-0 text-bright transition-transform group-hover:translate-x-1 sm:h-[13px] sm:w-[13px]"
+                <Image
+                  src="/logo.png"
+                  alt="Ritz Auto Care LLC"
+                  width={190}
+                  height={55}
+                  className="h-10 w-auto object-contain sm:h-12"
                 />
-                <span>{service}</span>
               </a>
-            </li>
-          ))}
-        </ul>
-      </div>
 
-      {/* BRANDS */}
-      <div className="col-span-1 min-w-0 lg:col-span-2">
-        <h3 className="mb-4 text-sm font-bold text-white sm:mb-6 sm:text-base">
-          Brands We Serve
-          <span className="mt-2 block h-0.5 w-8 rounded-full bg-bright" />
-        </h3>
+              <p className="mt-4 max-w-sm text-xs leading-6 text-steel/80 sm:mt-5 sm:text-sm sm:leading-7">
+                Experience dealer-standard automotive care with professional
+                service, reliable solutions and quality workmanship in Dubai
+                and Abu Dhabi.
+              </p>
 
-        <ul className="space-y-3 text-[11px] sm:space-y-3.5 sm:text-sm">
-          {brands.slice(0, 6).map((brand) => (
-            <li key={brand.logo}>
+              {/* Action Buttons */}
+              <div className="mt-5 flex flex-wrap gap-2.5 sm:mt-6 sm:gap-3">
+                <a
+                  href={WA}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Chat with Ritz Auto Care on WhatsApp"
+                  className="inline-flex items-center gap-2 rounded-full bg-royal px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-bright hover:text-ink sm:px-5 sm:py-3 sm:text-sm"
+                >
+                  <MessageCircle size={16} />
+                  WhatsApp Us
+                  <ArrowUpRight size={14} />
+                </a>
+
+                <a
+                  href={`tel:${PHONE}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-xs font-semibold text-white transition hover:border-bright hover:text-bright sm:px-5 sm:py-3 sm:text-sm"
+                >
+                  <Phone size={15} />
+                  Call Now
+                </a>
+              </div>
+            </div>
+
+            {/* SERVICES */}
+            <div className="col-span-1 min-w-0 lg:col-span-2">
+              <h3 className="mb-4 text-sm font-bold text-white sm:mb-6 sm:text-base">
+                Our Services
+                <span className="mt-2 block h-0.5 w-8 rounded-full bg-bright" />
+              </h3>
+
+              <ul className="space-y-3 text-[11px] sm:space-y-3.5 sm:text-sm">
+                {[
+                  "Car Battery Change",
+                  "Jump Start",
+                  "Flat Tyre Change",
+                  "Fuel Delivery",
+                  "Car Oil Change",
+                  "Car AC Repair",
+                ].map((service) => (
+                  <li key={service}>
+                    <a
+                      href="#services"
+                      className="group inline-flex items-start gap-1.5 transition-colors hover:text-white sm:gap-2"
+                    >
+                      <ArrowRight
+                        size={12}
+                        className="mt-0.5 shrink-0 text-bright transition-transform group-hover:translate-x-1 sm:h-[13px] sm:w-[13px]"
+                      />
+                      <span>{service}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* BRANDS */}
+            <div className="col-span-1 min-w-0 lg:col-span-2">
+              <h3 className="mb-4 text-sm font-bold text-white sm:mb-6 sm:text-base">
+                Brands We Serve
+                <span className="mt-2 block h-0.5 w-8 rounded-full bg-bright" />
+              </h3>
+
+              <ul className="space-y-3 text-[11px] sm:space-y-3.5 sm:text-sm">
+                {brands.slice(0, 6).map((brand) => (
+                  <li key={brand.logo}>
+                    <a
+                      href="#brands"
+                      className="group inline-flex items-start gap-1.5 transition-colors hover:text-white sm:gap-2"
+                    >
+                      <ArrowRight
+                        size={12}
+                        className="mt-0.5 shrink-0 text-bright transition-transform group-hover:translate-x-1 sm:h-[13px] sm:w-[13px]"
+                      />
+                      <span>{brand.name}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+
               <a
                 href="#brands"
-                className="group inline-flex items-start gap-1.5 transition-colors hover:text-white sm:gap-2"
+                className="mt-4 inline-flex items-center gap-1 text-[10px] font-bold text-bright transition hover:text-white sm:mt-5 sm:gap-2 sm:text-xs"
               >
-                <ArrowRight
-                  size={12}
-                  className="mt-0.5 shrink-0 text-bright transition-transform group-hover:translate-x-1 sm:h-[13px] sm:w-[13px]"
-                />
-                <span>{brand.name}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <a
-          href="#brands"
-          className="mt-4 inline-flex items-center gap-1 text-[10px] font-bold text-bright transition hover:text-white sm:mt-5 sm:gap-2 sm:text-xs"
-        >
-          Explore all brands
-          <ArrowUpRight size={13} />
-        </a>
-      </div>
-
-      {/* CONTACT */}
-      <div className="col-span-2 lg:col-span-4">
-        <h3 className="mb-5 text-sm font-bold text-white sm:mb-6 sm:text-base">
-          Get In Touch
-          <span className="mt-2 block h-0.5 w-8 rounded-full bg-bright" />
-        </h3>
-
-        <ul className="space-y-4 text-xs sm:space-y-5 sm:text-sm">
-
-          {/* Phone */}
-          <li className="flex items-start gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-bright sm:h-10 sm:w-10">
-              <Phone size={16} />
-            </span>
-
-            <div className="min-w-0">
-              <p className="mb-1 text-[10px] text-steel/60 sm:text-xs">
-                Phone / WhatsApp
-              </p>
-
-              <a
-                href={`tel:${PHONE}`}
-                className="font-semibold text-white transition hover:text-bright"
-              >
-                +971 56 780 7979
+                Explore all brands
+                <ArrowUpRight size={13} />
               </a>
             </div>
-          </li>
 
-          {/* Email */}
-          <li className="flex items-start gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-bright sm:h-10 sm:w-10">
-              <Mail size={16} />
-            </span>
+            {/* CONTACT */}
+            <div className="col-span-2 lg:col-span-4">
+              <h3 className="mb-5 text-sm font-bold text-white sm:mb-6 sm:text-base">
+                Get In Touch
+                <span className="mt-2 block h-0.5 w-8 rounded-full bg-bright" />
+              </h3>
 
-            <div className="min-w-0">
-              <p className="mb-1 text-[10px] text-steel/60 sm:text-xs">
-                Email Address
-              </p>
+              <ul className="space-y-4 text-xs sm:space-y-5 sm:text-sm">
 
-              <a
-                href="mailto:info@ritzautocare.ae"
-                className="break-all font-semibold text-white transition hover:text-bright"
-              >
-                info@ritzautocare.ae
-              </a>
+                {/* Phone */}
+                <li className="flex items-start gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-bright sm:h-10 sm:w-10">
+                    <Phone size={16} />
+                  </span>
+
+                  <div className="min-w-0">
+                    <p className="mb-1 text-[10px] text-steel/60 sm:text-xs">
+                      Phone / WhatsApp
+                    </p>
+
+                    <a
+                      href={`tel:${PHONE}`}
+                      className="font-semibold text-white transition hover:text-bright"
+                    >
+                      +971 56 780 7979
+                    </a>
+                  </div>
+                </li>
+
+                {/* Email */}
+                <li className="flex items-start gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-bright sm:h-10 sm:w-10">
+                    <Mail size={16} />
+                  </span>
+
+                  <div className="min-w-0">
+                    <p className="mb-1 text-[10px] text-steel/60 sm:text-xs">
+                      Email Address
+                    </p>
+
+                    <a
+                      href="mailto:info@ritzautocare.ae"
+                      className="break-all font-semibold text-white transition hover:text-bright"
+                    >
+                      info@ritzautocare.ae
+                    </a>
+                  </div>
+                </li>
+
+                {/* Address */}
+                <li className="flex items-start gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-bright sm:h-10 sm:w-10">
+                    <MapPin size={16} />
+                  </span>
+
+                  <div className="min-w-0">
+                    <p className="mb-1 text-[10px] text-steel/60 sm:text-xs">
+                      Our Location
+                    </p>
+
+                    <p className="leading-6 text-steel/90">
+                      DIP 1, Warehouse 35, Street 59, near AIKO Mall,
+                      Dubai Investment Park First, Dubai.
+                    </p>
+                  </div>
+                </li>
+
+              </ul>
             </div>
-          </li>
 
-          {/* Address */}
-          <li className="flex items-start gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-bright sm:h-10 sm:w-10">
-              <MapPin size={16} />
-            </span>
+          </div>
 
-            <div className="min-w-0">
-              <p className="mb-1 text-[10px] text-steel/60 sm:text-xs">
-                Our Location
+          {/* BOTTOM FOOTER */}
+          <div className="mt-10 border-t border-white/10 pt-6 sm:mt-14 sm:pt-7">
+            <div className="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:gap-4 sm:text-left">
+
+              <p className="text-[10px] leading-5 text-steel/60 sm:text-xs">
+                © {new Date().getFullYear()} Ritz Auto Care LLC. All rights reserved.
               </p>
 
-              <p className="leading-6 text-steel/90">
-                DIP 1, Warehouse 35, Street 59, near AIKO Mall,
-                Dubai Investment Park First, Dubai.
-              </p>
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] text-steel/60 sm:gap-x-6 sm:text-xs">
+                <a
+                  href="/privacy-policy"
+                  className="transition hover:text-white"
+                >
+                  Privacy Policy
+                </a>
+
+                <a
+                  href="/terms-and-conditions"
+                  className="transition hover:text-white"
+                >
+                  Terms &amp; Conditions
+                </a>
+
+                <a
+                  href="#home"
+                  className="inline-flex items-center gap-1 font-semibold text-bright transition hover:text-white"
+                >
+                  Back to Top
+                  <ArrowUpRight size={13} />
+                </a>
+              </div>
+
             </div>
-          </li>
+          </div>
 
-        </ul>
-      </div>
-
-    </div>
-
-    {/* BOTTOM FOOTER */}
-    <div className="mt-10 border-t border-white/10 pt-6 sm:mt-14 sm:pt-7">
-      <div className="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:gap-4 sm:text-left">
-
-        <p className="text-[10px] leading-5 text-steel/60 sm:text-xs">
-          © {new Date().getFullYear()} Ritz Auto Care LLC. All rights reserved.
-        </p>
-
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] text-steel/60 sm:gap-x-6 sm:text-xs">
-          <a
-            href="/privacy-policy"
-            className="transition hover:text-white"
-          >
-            Privacy Policy
-          </a>
-
-          <a
-            href="/terms-and-conditions"
-            className="transition hover:text-white"
-          >
-            Terms &amp; Conditions
-          </a>
-
-          <a
-            href="#home"
-            className="inline-flex items-center gap-1 font-semibold text-bright transition hover:text-white"
-          >
-            Back to Top
-            <ArrowUpRight size={13} />
-          </a>
         </div>
-
-      </div>
-    </div>
-
-  </div>
-</footer>
+      </footer>
 
 
       {/* Floating call button */}
