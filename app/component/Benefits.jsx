@@ -10,7 +10,15 @@ import {
   ArrowRight,
   ArrowUpRight,
   Award,
+  Phone,
 } from "lucide-react";
+
+/*
+  Logo palette (hex only, no Tailwind config needed):
+  #111820 logo navy | #145B8B deep | #176DA5 brand | #2694D2 gear blue
+  #45B5F0 bright    | #65B9EC pale | #C5CDD5 silver | #F5F7FA page bg
+*/
+
 
 const BENEFITS = [
   {
@@ -37,172 +45,174 @@ const STEPS = [
   { icon: Car, title: "We deliver it back", desc: "Right to your doorstep" },
 ];
 
-export default function BenefitsSection({ PHONE, up }) {
+export default function BenefitsSection({ PHONE }) {
   const reduce = useReducedMotion();
 
-  const fade = (x, delay = 0) =>
+  const rise = (delay = 0) =>
     reduce
       ? {}
       : {
-          initial: { opacity: 0, x },
-          whileInView: { opacity: 1, x: 0 },
-          viewport: { once: true },
-          transition: { duration: 0.45, delay },
+          initial: { opacity: 0, y: 28 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, amount: 0.2 },
+          transition: { duration: 0.55, delay, ease: "easeOut" },
         };
 
   return (
     <section
       aria-labelledby="benefits-heading"
-      className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-24"
+      className="relative overflow-hidden bg-[#F5F7FA] py-16 text-[#111827] sm:py-20 lg:py-24"
     >
       {/* Background */}
-      <div aria-hidden className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-blue-100/70 blur-[120px]" />
+      <div aria-hidden className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-[#2694D2]/15 blur-[120px]" />
       <div aria-hidden className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-slate-200/70 blur-[120px]" />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-10">
-        {/* LEFT */}
-        <motion.div variants={up} initial="hidden" whileInView="show" viewport={{ once: true }}>
-          <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-royal">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+        {/* ================= HEADING ================= */}
+        <motion.div {...rise()} className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#176DA5] shadow-sm">
             <Sparkles size={14} aria-hidden />
             Exclusive Benefits
           </span>
 
           <h2
             id="benefits-heading"
-            className="mt-6 max-w-xl text-3xl font-extrabold leading-[1.15] tracking-tight text-slate-900 sm:text-4xl lg:text-[46px]"
+            className="mt-5 text-2xl font-extrabold leading-[1.2] tracking-tight text-slate-900 sm:text-[28px] lg:text-[34px]"
           >
             More care.
-            <span className="block text-royal">Zero extra cost.</span>
+            <span className="block text-[#176DA5]">Zero extra cost.</span>
           </h2>
 
-          <p className="mt-5 max-w-lg text-base leading-7 text-slate-600">
+          <p className="mx-auto mt-4 max-w-lg text-sm leading-7 text-slate-600 sm:text-[15px]">
             Every booking comes with complimentary services designed to make
             your car maintenance effortless.
           </p>
-
-          <ul className="mt-10 space-y-6">
-            {BENEFITS.map(({ icon: Icon, title, desc }, i) => (
-              <motion.li key={title} {...fade(-18, i * 0.1)} className="group flex gap-4">
-                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-blue-100 bg-white text-royal shadow-sm transition-colors duration-300 group-hover:border-royal group-hover:bg-royal group-hover:text-white sm:h-14 sm:w-14">
-                  <Icon size={22} strokeWidth={1.8} aria-hidden />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2.5">
-                    <h3 className="text-base font-bold text-slate-900">{title}</h3>
-                    <span className="rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-700">
-                      Complimentary
-                    </span>
-                  </div>
-                  <p className="mt-1.5 max-w-md text-sm leading-6 text-slate-600">{desc}</p>
-                </div>
-              </motion.li>
-            ))}
-          </ul>
-
-          <div className="mt-10 flex flex-wrap gap-3">
-            <a
-              href={`tel:${PHONE}`}
-              className="group inline-flex items-center gap-2 rounded-full bg-royal px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-900/15 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#174DAA] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal"
-            >
-              Book Your Service
-              <ArrowRight size={16} aria-hidden className="transition-transform group-hover:translate-x-1" />
-            </a>
-
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-bold text-slate-700 transition-all duration-300 hover:-translate-y-0.5 hover:border-royal hover:text-royal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-royal"
-            >
-              Explore Services
-              <ArrowUpRight size={15} aria-hidden />
-            </a>
-          </div>
         </motion.div>
 
-        {/* RIGHT */}
-        <motion.div
-          variants={up}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="relative"
-        >
-          <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-xl shadow-slate-200/60">
-            {/* Header */}
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 p-6 sm:p-8">
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
-                  Ritz Auto Care
-                </p>
-                <h3 className="mt-2 text-xl font-extrabold text-slate-900">
-                  Your Benefits Package
-                </h3>
-                <p className="mt-1 text-sm text-slate-500">
-                  Added care with your service booking
-                </p>
-              </div>
-              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-blue-100 bg-blue-50 text-royal">
-                <Award size={24} aria-hidden />
-              </div>
-            </div>
+        {/* ================= BENEFIT CARDS ================= */}
+        <ul className="mt-12 grid gap-5 md:grid-cols-3">
+          {BENEFITS.map(({ icon: Icon, title, desc }, i) => (
+            <motion.li
+              key={title}
+              {...rise(i * 0.1)}
+              className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-[#2694D2]/50 hover:shadow-xl hover:shadow-[#176DA5]/15 sm:p-7"
+            >
+              <span
+                aria-hidden
+                className="absolute right-5 top-4 text-4xl font-black text-slate-100 transition-colors duration-300 group-hover:text-[#2694D2]/20"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
 
-            {/* Highlight */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-[#EFF6FF] via-white to-[#F5F8FC] px-6 py-6 sm:px-8">
-              <div aria-hidden className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full bg-blue-200/40 blur-3xl" />
-              <div className="relative flex items-center justify-between gap-4">
-                <div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-700">
-                    <Check size={12} aria-hidden />
-                    Included with every booking
+              <div className="relative grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-[#145B8B] to-[#2694D2] text-white shadow-lg shadow-[#176DA5]/25 transition-transform duration-300 group-hover:scale-105">
+                <Icon size={24} strokeWidth={1.8} aria-hidden />
+              </div>
+
+              <span className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-[#2694D2]/25 bg-[#176DA5]/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#176DA5]">
+                <Check size={11} strokeWidth={3} aria-hidden />
+                Complimentary
+              </span>
+
+              <h3 className="mt-3 text-lg font-extrabold text-slate-900">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{desc}</p>
+
+              <div className="mt-5 h-[3px] w-9 rounded-full bg-gradient-to-r from-[#2694D2] to-[#65B9EC] transition-all duration-300 group-hover:w-full" />
+            </motion.li>
+          ))}
+        </ul>
+
+        {/* ================= DARK PROCESS PANEL ================= */}
+        <motion.div
+          {...rise(0.1)}
+          className="relative mt-8 overflow-hidden rounded-3xl border border-white/[0.06] bg-[#111820] p-6 text-white shadow-2xl shadow-[#111820]/25 sm:p-10 lg:p-12"
+        >
+          {/* glows + accent line */}
+          <div aria-hidden className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#176DA5]/35 blur-[100px]" />
+          <div aria-hidden className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-[#2694D2]/15 blur-[100px]" />
+          <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#2694D2]/70 to-transparent" />
+
+          <div className="relative">
+            {/* top row */}
+            <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+              <div className="max-w-xl">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-[#2694D2]/30 bg-[#176DA5]/25 text-[#65B9EC]">
+                    <Award size={22} aria-hidden />
                   </span>
-                  <p className="mt-3 text-2xl font-extrabold leading-tight text-slate-900">
-                    Complimentary <span className="text-royal">Care Package</span>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#65B9EC]">
+                    Ritz Auto Care &middot; Your Benefits Package
                   </p>
                 </div>
-                <Sparkles size={22} aria-hidden className="hidden shrink-0 text-royal sm:block" />
+
+                <h3 className="mt-4 text-2xl font-extrabold leading-tight sm:text-[28px]">
+                  How We Care
+                  <span className="bg-gradient-to-r from-[#2694D2] to-[#65B9EC] bg-clip-text text-transparent">
+                    {" "}For Your Car
+                  </span>
+                </h3>
+
+                <p className="mt-3 text-sm leading-7 text-[#C5CDD5]">
+                  Added care with your service booking. Premium care, every
+                  time. Your convenience is our priority.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={`tel:${PHONE}`}
+                  className="group inline-flex items-center gap-2 rounded-lg border border-[#45B5F0]/25 bg-gradient-to-r from-[#145B8B] via-[#176DA5] to-[#2694D2] px-6 py-3.5 text-[13px] font-bold text-white shadow-lg shadow-[#176DA5]/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[#2694D2]/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#45B5F0]"
+                >
+                  <Phone size={15} aria-hidden />
+                  Book Your Service
+                  <ArrowRight
+                    size={16}
+                    aria-hidden
+                    className="transition-transform group-hover:translate-x-1"
+                  />
+                </a>
+
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-2 rounded-lg border border-[#C5CDD5]/25 bg-white/[0.05] px-6 py-3.5 text-[13px] font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-[#2694D2] hover:bg-[#176DA5]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#45B5F0]"
+                >
+                  Explore Services
+                  <ArrowUpRight size={15} aria-hidden />
+                </a>
               </div>
             </div>
 
-            {/* Timeline */}
-            <div className="p-6 sm:p-8">
-              <div className="mb-6 flex items-center justify-between">
-                <h4 className="text-sm font-bold text-slate-900">How We Care For Your Car</h4>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  4 Steps
-                </span>
-              </div>
+            {/* steps */}
+            <div className="relative mt-10">
+              <div
+                aria-hidden
+                className="absolute left-[12.5%] right-[12.5%] top-7 hidden border-t-2 border-dashed border-[#2694D2]/40 lg:block"
+              />
 
-              <ol>
+              <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {STEPS.map(({ icon: Icon, title, desc }, i) => (
-                  <motion.li key={title} {...fade(12, i * 0.08)} className="relative flex items-center gap-4 pb-6 last:pb-0">
-                    {i !== STEPS.length - 1 && (
-                      <span aria-hidden className="absolute left-5 top-10 h-[calc(100%-2.5rem)] w-px bg-slate-200" />
-                    )}
-
-                    <div className="relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-blue-100 bg-blue-50 text-royal">
-                      <Icon size={18} aria-hidden />
+                  <motion.li
+                    key={title}
+                    {...rise(i * 0.08)}
+                    className="group relative flex items-start gap-4 lg:flex-col lg:items-center lg:text-center"
+                  >
+                    <div className="relative z-10 grid h-14 w-14 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#145B8B] to-[#2694D2] text-white shadow-lg shadow-[#176DA5]/40 ring-4 ring-[#111820] transition-transform duration-300 group-hover:scale-110">
+                      <Icon size={22} strokeWidth={1.8} aria-hidden />
+                      <span className="absolute -right-1.5 -top-1.5 grid h-6 w-6 place-items-center rounded-full border-2 border-[#111820] bg-white text-[10px] font-black text-[#111820]">
+                        {i + 1}
+                      </span>
                     </div>
 
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold text-slate-800">{title}</p>
-                      <p className="mt-0.5 text-xs text-slate-500">{desc}</p>
+                    <div className="min-w-0 lg:mt-4">
+                      <p className="text-sm font-bold text-white">{title}</p>
+                      <p className="mt-1 text-xs leading-5 text-[#C5CDD5]">{desc}</p>
+                      <span className="mt-2.5 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#65B9EC]">
+                        <Check size={12} strokeWidth={3} aria-hidden />
+                        Included
+                      </span>
                     </div>
-
-                    <Check size={17} aria-hidden className="ml-auto shrink-0 text-emerald-600" />
                   </motion.li>
                 ))}
               </ol>
-            </div>
-
-            {/* Footer */}
-            <div className="flex items-center justify-between gap-4 border-t border-slate-100 bg-slate-50/60 px-6 py-5 sm:px-8">
-              <div>
-                <p className="text-sm font-bold text-slate-900">Premium care, every time.</p>
-                <p className="mt-0.5 text-xs text-slate-500">Your convenience is our priority.</p>
-              </div>
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blue-50 text-royal">
-                <ShieldCheck size={22} aria-hidden />
-              </div>
             </div>
           </div>
         </motion.div>
