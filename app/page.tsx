@@ -148,35 +148,7 @@ function Gauge() {
 }
 
 
-const heroSlides = [
-  {
-    image: "/hero-1.jpeg",
-    eyebrow: "Premium Automotive Care",
-    title: "Premium Car Care.",
-    highlight: "Without Compromise.",
-    description:
-      "Professional automotive solutions for luxury and everyday vehicles. Expert technicians and advanced diagnostics for complete vehicle care.",
-    caption: "Care That Goes Beyond the Road.",
-  },
-  {
-    image: "/hero-2.jpeg",
-    eyebrow: "Expert Automotive Services",
-    title: "Expert Repairs.",
-    highlight: "Exceptional Results.",
-    description:
-      "From minor repairs to major servicing, our experienced technicians focus on quality workmanship and reliable vehicle performance.",
-    caption: "Precision in Every Service.",
-  },
-  {
-    image: "/hero-3.jpeg",
-    eyebrow: "Advanced Vehicle Diagnostics",
-    title: "Smarter Diagnostics.",
-    highlight: "Better Performance.",
-    description:
-      "Modern diagnostic equipment and professional inspection help identify vehicle issues and keep your car running smoothly.",
-    caption: "Technology Meets Expertise.",
-  },
-];
+
 
 
 
@@ -334,28 +306,7 @@ function BeforeAfterSection() {
 
 export default function Home() {
 
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  useEffect(() => {
-    if (isPaused) return;
-
-    const timer = setInterval(() => {
-      setActiveSlide((current) => (current + 1) % heroSlides.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, [isPaused]);
-
-  const nextSlide = () => {
-    setActiveSlide((current) => (current + 1) % heroSlides.length);
-  };
-
-  const prevSlide = () => {
-    setActiveSlide(
-      (current) => (current - 1 + heroSlides.length) % heroSlides.length
-    );
-  };
+ 
 
   return (
     <MotionConfig reducedMotion="user">
@@ -390,203 +341,128 @@ export default function Home() {
 
       {/* COMPACT PREMIUM HERO CAROUSEL */}
 
-      <section
-        className="relative isolate h-[560px] overflow-hidden bg-[#080B12] text-white sm:h-[600px] lg:h-[min(80vh,620px)]"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
-        {/* BACKGROUND IMAGE */}
 
-        <AnimatePresence mode="sync">
-          <motion.div
-            key={activeSlide}
-            initial={{ opacity: 0, scale: 1.045 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              opacity: { duration: 0.8 },
-              scale: { duration: 5.5, ease: "linear" },
-            }}
-            className="absolute inset-0"
-          >
-            <Image
-              src={heroSlides[activeSlide].image}
-              alt={heroSlides[activeSlide].caption}
-              fill
-              priority={activeSlide === 0}
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-          </motion.div>
-        </AnimatePresence>
+<section className="relative isolate h-[560px] overflow-hidden bg-[#080B12] text-white sm:h-[600px] lg:h-[min(80vh,620px)]">
 
-        {/* IMAGE OVERLAY */}
+  {/* BACKGROUND VIDEO */}
+  <video
+    autoPlay
+    muted
+    loop
+    playsInline
+    preload="metadata"
+    poster="/hero-poster.png"
+    aria-label="Ritz Auto Care professional automotive workshop"
+    className="absolute inset-0 h-full w-full object-cover object-center"
+  >
+    <source src="/hero.mp4" type="video/mp4" />
+    Your browser does not support HTML video.
+  </video>
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#070B14]/95 via-[#070B14]/70 to-[#070B14]/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#070B14]/65 via-transparent to-transparent" />
+  {/* DARK VIDEO OVERLAY */}
+  <div className="absolute inset-0 bg-gradient-to-r from-[#070B14]/95 via-[#070B14]/70 to-[#070B14]/25" />
+  <div className="absolute inset-0 bg-gradient-to-t from-[#070B14]/75 via-transparent to-[#070B14]/10" />
 
-        {/* MAIN CONTENT */}
+  {/* MAIN CONTENT */}
+  <div className="relative z-10 mx-auto flex h-full max-w-[1440px] items-center px-5 pb-8 pt-10 sm:px-8 lg:px-14">
 
-        <div className="relative z-10 mx-auto flex h-full max-w-[1440px] items-center px-5 pb-12 pt-10 sm:px-8 lg:px-14">
+    <motion.div
+      initial={{ opacity: 0, y: 25, filter: "blur(6px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={{ duration: 0.9, ease: "easeOut" }}
+      className="w-full max-w-xl"
+    >
 
-          <div className="w-full max-w-xl">
+      {/* EYEBROW */}
+      <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 backdrop-blur-md">
+        <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+        <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/90 sm:text-[10px]">
+          Premium Automotive Care
+        </span>
+      </div>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeSlide}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              >
+      {/* HEADING */}
+      <h1 className="max-w-lg text-[32px] font-extrabold leading-[1.12] tracking-tight sm:text-[42px] lg:text-[48px]">
+        Premium Car Care.
+        <span className="mt-1 block text-blue-400">
+          Without Compromise.
+        </span>
+      </h1>
 
-                {/* EYEBROW */}
+      {/* DESCRIPTION */}
+      <p className="mt-4 max-w-md text-[12px] leading-6 text-white/75 sm:text-[13px] sm:leading-7">
+        Professional automotive solutions for luxury and everyday
+        vehicles. Expert technicians and advanced diagnostics for
+        complete vehicle care.
+      </p>
 
-                <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 backdrop-blur-md">
-                  <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-                  <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/90 sm:text-[10px]">
-                    {heroSlides[activeSlide].eyebrow}
-                  </span>
-                </div>
+      {/* LOCATION */}
+      <div className="mt-4 flex items-center gap-2 text-[11px] font-medium text-white/75">
+        <MapPin size={14} className="text-blue-400" />
+        Dubai & Abu Dhabi, UAE
+      </div>
 
-                {/* HEADING */}
+      {/* BUTTONS */}
+      <div className="mt-6 flex flex-wrap gap-3">
 
-                <h1 className="max-w-lg text-[32px] font-extrabold leading-[1.12] tracking-tight sm:text-[42px] lg:text-[48px]">
-                  {heroSlides[activeSlide].title}
-                  <span className="mt-1 block text-blue-400">
-                    {heroSlides[activeSlide].highlight}
-                  </span>
-                </h1>
+        <a
+          href="#contact"
+          className="group inline-flex items-center gap-2 rounded-full bg-royal px-5 py-3 text-[11px] font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#174DAA] sm:text-xs"
+        >
+          Book Your Service
+          <ArrowRight
+            size={14}
+            className="transition-transform group-hover:translate-x-1"
+          />
+        </a>
 
-                {/* DESCRIPTION */}
+        <a
+          href={`tel:${PHONE}`}
+          className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-slate-900 sm:text-xs"
+        >
+          <Phone size={14} />
+          {PHONE}
+        </a>
 
-                <p className="mt-4 max-w-md text-[12px] leading-6 text-white/75 sm:text-[13px] sm:leading-7">
-                  {heroSlides[activeSlide].description}
-                </p>
+      </div>
 
-                {/* LOCATION */}
+      {/* FREE BENEFITS */}
+      <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/20 pt-5">
 
-                <div className="mt-4 flex items-center gap-2 text-[11px] font-medium text-white/75">
-                  <MapPin size={14} className="text-blue-400" />
-                  Dubai & Abu Dhabi, UAE
-                </div>
-
-                {/* BUTTONS */}
-
-                <div className="mt-6 flex flex-wrap gap-3">
-
-                  <a
-                    href="#contact"
-                    className="group inline-flex items-center gap-2 rounded-full bg-royal px-5 py-3 text-[11px] font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#174DAA] sm:text-xs"
-                  >
-                    Book Your Service
-                    <ArrowRight
-                      size={14}
-                      className="transition-transform group-hover:translate-x-1"
-                    />
-                  </a>
-
-                  <a
-                    href={`tel:${PHONE}`}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-slate-900 sm:text-xs"
-                  >
-                    <Phone size={14} />
-                    {PHONE}
-                  </a>
-
-                </div>
-
-                {/* FREE BENEFITS */}
-
-                <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/20 pt-5">
-
-                  {[
-                    "Free Pick-up & Drop-off",
-                    "Free Inspection",
-                    "Complimentary Wash",
-                  ].map((item) => (
-                    <div key={item} className="flex items-center gap-1.5">
-                      <Check size={13} className="shrink-0 text-emerald-400" />
-                      <span className="text-[10px] font-medium text-white/80 sm:text-[11px]">
-                        {item}
-                      </span>
-                    </div>
-                  ))}
-
-                </div>
-
-              </motion.div>
-            </AnimatePresence>
-
-          </div>
-        </div>
-
-        {/* SLIDER NAVIGATION */}
-
-        <div className="absolute bottom-5 left-5 right-5 z-20 mx-auto flex max-w-[1440px] items-center justify-between sm:left-8 sm:right-8 lg:left-14 lg:right-14">
-
-          {/* INDICATORS */}
-
-          <div className="flex items-center gap-2.5">
-
-            {heroSlides.map((slide, index) => (
-              <button
-                key={slide.image}
-                type="button"
-                onClick={() => setActiveSlide(index)}
-                aria-label={`Go to slide ${index + 1}`}
-                aria-current={activeSlide === index ? "true" : undefined}
-                className={`h-1.5 rounded-full transition-all duration-500 ${activeSlide === index
-                    ? "w-9 bg-white"
-                    : "w-4 bg-white/40 hover:bg-white/80"
-                  }`}
-              />
-            ))}
-
-            <span className="ml-2 text-[10px] font-semibold tracking-widest text-white/70">
-              0{activeSlide + 1} / 0{heroSlides.length}
+        {[
+          "Free Pick-up & Drop-off",
+          "Free Inspection",
+          "Complimentary Wash",
+        ].map((item) => (
+          <div key={item} className="flex items-center gap-1.5">
+            <Check size={13} className="shrink-0 text-emerald-400" />
+            <span className="text-[10px] font-medium text-white/80 sm:text-[11px]">
+              {item}
             </span>
-
           </div>
+        ))}
 
-          {/* ARROWS */}
+      </div>
 
-          <div className="flex items-center gap-2">
+    </motion.div>
+  </div>
 
-            <button
-              type="button"
-              onClick={prevSlide}
-              aria-label="Previous slide"
-              className="grid h-9 w-9 place-items-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md transition hover:bg-white hover:text-black"
-            >
-              <ChevronLeft size={17} />
-            </button>
+  {/* BRAND CAPTION */}
+  <div className="absolute bottom-7 right-8 z-10 hidden text-right lg:block">
+    <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/50">
+      Ritz Auto Care LLC
+    </p>
+    <p className="mt-1 text-xs font-semibold text-white/80">
+      Care That Goes Beyond the Road.
+    </p>
+  </div>
 
-            <button
-              type="button"
-              onClick={nextSlide}
-              aria-label="Next slide"
-              className="grid h-9 w-9 place-items-center rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-md transition hover:bg-white hover:text-black"
-            >
-              <ChevronRight size={17} />
-            </button>
+  {/* BOTTOM VIDEO ACCENT */}
+  <div className="absolute bottom-0 left-0 h-[3px] w-full bg-white/10">
+    <div className="h-full w-1/3 bg-royal" />
+  </div>
 
-          </div>
-
-        </div>
-
-        {/* BRAND CAPTION */}
-
-        <div className="absolute bottom-[75px] right-8 z-10 hidden text-right lg:block">
-          <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-white/50">
-            Ritz Auto Care LLC
-          </p>
-          <p className="mt-1 text-xs font-semibold text-white/80">
-            {heroSlides[activeSlide].caption}
-          </p>
-        </div>
-
-      </section>
+</section>
 
 
 
@@ -812,7 +688,7 @@ export default function Home() {
 
       <section
         id="about"
-        className="relative overflow-hidden bg-[#F4F6FA] py-24"
+        className="relative overflow-hidden bg-[#F4F6FA] py-8"
       >
         {/* Background Decoration */}
         <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/50 blur-[120px]" />
@@ -1360,7 +1236,7 @@ export default function Home() {
 
       <section
         id="how-it-works"
-        className="relative overflow-hidden bg-[#F4F6FA] py-24"
+        className="relative overflow-hidden bg-[#F4F6FA] py-8"
       >
         {/* Background Effects */}
         <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/60 blur-[120px]" />
@@ -1844,7 +1720,7 @@ export default function Home() {
 
       <section
         id="brands"
-        className="relative overflow-hidden bg-[#F3F5F8] py-24"
+        className="relative overflow-hidden bg-[#F3F5F8] py-8"
       >
         {/* Background decoration */}
         <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-blue-100/60 blur-[120px]" />
@@ -1963,7 +1839,7 @@ export default function Home() {
 
       <section
         id="reviews"
-        className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-24"
+        className="relative overflow-hidden bg-[#F5F7FA] py-20 text-[#111827] sm:py-8"
       >
         {/* BACKGROUND EFFECTS */}
 
@@ -1983,7 +1859,7 @@ export default function Home() {
             </span>
 
             <h2 className="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-              Trusted by Drivers.
+             Trusted by Car Owners
               <span className="block text-royal">
                 Loved by Customers.
               </span>
